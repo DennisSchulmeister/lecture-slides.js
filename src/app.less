@@ -1,0 +1,66 @@
+/*
+ * Learning Slides (https://www.buzzlms.de)
+ * © 2017  Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ */
+
+html, body {
+    min-height: 100%;
+    height: 100%;
+}
+
+:local(.container) {
+    display: flex;
+    flex-direction: column;
+
+    // Fix cursor for disabled links
+    .disabled {
+        cursor: initial;
+    }
+
+    //  No dotted border around links
+    a {
+        outline: none;
+    }
+
+    // Progress bar
+    @progressBarHeight: 2px;
+
+    .ls-progress {
+        display: block;
+        height: @progressBarHeight;
+
+        .ls-bar {
+            height: @progressBarHeight;
+            transition: width 0.75s;
+        }
+    }
+
+    // Navigation bar
+    #ls-navbar {
+        #ls-nav-goto-id {
+            width: 6em;
+        }
+
+        .ls-separator {
+            border: 0px solid darkgrey;
+            border-right-width: 1px;
+        }
+    }
+
+    /*
+    position: relative;
+    // Slide Numbers
+    .ls-slide_numbers {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+
+        font-size: large;
+    }
+    */
+}

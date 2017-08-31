@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="shortcut icon" href="%public_url%/favicon.svg" />
+        <link rel="stylesheet" href="%public_url%/style.css" />
+    </head>
+    <body class="slides invisible">
+        <header>
+            Grundlagen des World Wide Web
+        </header>
+
+        <section>
+            <h1>Eine kurze Vorstellung ...</h1>
+            <article>
+                <p>Hier bin ich also!</p>
+            </article>
+            <aside>
+                Hier kommen die Randnotizen mit den Erklärungen.
+            </aside>
+        </section>
+
+        <section id="last">
+            <h1>Das war's auch schon</h1>
+            <article>
+                <ul>
+                    <li>Vielen Dank für Ihre Aufmerksamkeit</li>
+                    <li>Und auf Wiedersehen</li>
+                </ul>
+            </article>
+            <aside>
+                Noch mehr Notizen hier.
+            </aside>
+        </section>
+
+        <!-- Scripts to initialize the slideshow -->
+        <script src="%public_url%/learning-slides.vendor.bundle.js"></script>
+        <script src="%public_url%/learning-slides.app.bundle.js"></script>
+        <script>
+            new Slides({
+                labelPrev: "Zurück",
+                labelNext: "Weiter",
+                labelGoTo: "Gehe zu",
+                labelOverview: "Übersicht",
+                labelPresentationMode: "Präsentationsmodus",
+            }).start();
+        </script>
+    </body>
+</html>
