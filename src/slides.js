@@ -32,7 +32,7 @@ import themes from "../themes/";
  *                            contains the slides
  *   ------------- ---------- --------------------------------------------------
  *   slides        section    Query selector to find the DOM elements inside
- *                            the container, which contain slides contents.
+ *                            the container, which contain slide contents.
  *   ------------- ---------- --------------------------------------------------
  *   header        header     Query selector to find the DOM element inside
  *                            the container, which contains the presentation
@@ -60,7 +60,7 @@ import themes from "../themes/";
  *   labelPresen-  Presen-    Label for the "Presentation mode" button
  *   tationMode    tation
  *                 Mode
-*   ------------- ---------- --------------------------------------------------
+*    ------------- ---------- --------------------------------------------------
  *   label-       Navigation  Label for the responsive navbar toggle button
  *   Navigation
  *   ============= ========== ==================================================
@@ -212,7 +212,7 @@ class Slides {
     /**
      * Called by some plugins to register a new UI mode. UI modes define the
      * principal layout and behaviour of the user interface, while this object
-     * mere controls the number of slides and the current slide number. Thus
+     * merely controls the number of slides and the current slide number. Thus
      * there is at least one UI mode plugin which is responsible for actually
      * rendering the slides and possibly another one for displaying a slide
      * overview.
@@ -325,7 +325,6 @@ class Slides {
         let slide = null;
 
         if (typeof slideId === 'string' || slideId instanceof String) {
-            console.log(this._slidesEnabled);
             for (let i = 0; i < this._slidesEnabled.length; i++) {
                 let slide1 = this._slidesEnabled[i];
 
