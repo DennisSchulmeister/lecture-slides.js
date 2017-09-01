@@ -15,6 +15,8 @@ import plugins from "./app.js";
 import styles from "./app.less";
 import themes from "../themes/";
 
+import Slide from "./slide.js";
+
 /**
  * This is the main entry class of Learning Slides. It must be instantiated
  * inside the presentation HTML like this:
@@ -124,7 +126,9 @@ class Slides {
         this._header = null;
 
         this._slideAmount = 0;
+        this._slidesAll = [];
         this._slidesEnabled = [];
+        this._slidesById = {};
 
         this._uiInitialized = false;
         this._uiModes = {};
@@ -160,6 +164,12 @@ class Slides {
 
             this._slides.detach();
             this._header.detach();
+
+            this._slides.each(index => {
+                let html = this._slides.get(index);
+                this._slidesAll.push(Slide.createFromHTML(html));
+            });
+
             this._updateSlideList();
             this._buildUiFrame();
             this.events.trigger("slides:ui:init");
@@ -319,20 +329,13 @@ class Slides {
      * enabled slides.
      *
      * @param  {String|Integer} slideId id or number of the slide
-     * @return {jQueryDomElement} DOM element with the slide definition
+     * @return {Slide} Slide definition
      */
     getSlide(slideId) {
         let slide = null;
 
         if (typeof slideId === 'string' || slideId instanceof String) {
-            for (let i = 0; i < this._slidesEnabled.length; i++) {
-                let slide1 = this._slidesEnabled[i];
-
-                if (slide1.attr("id") === slideId) {
-                    slide = slide1;
-                    break;
-                }
-            }
+            slide = this._slidesById[slideId];
         } else {
             slide = this._slidesEnabled[slideId - 1];
         }
@@ -353,14 +356,8 @@ class Slides {
         let slide = this.getSlide(slideId);
         if (!slide) return;
 
-        for (let i = 0; i < this._slidesEnabled.length; i++) {
-            let slide1 = this._slidesEnabled[i];
-
-            if (slide === slide1) {
-                this.slideNumber = i + 1;
-                break;
-            }
-        }
+        let index = this._slidesEnabled.indexOf(slide);
+        if (index > -1) this.slideNumber = index + 1;
     }
 
     /**
@@ -387,15 +384,15 @@ class Slides {
     disableSlide(slideId) {
         let currentSlide = this.getSlide(this.config.slideNumber);
 
-        let slideElement = this.getSlide(slideId);
-        if (!slideElement) return;
-        slideElement.addClass("invisible");
+        let disabledSlide = this.getSlide(slideId);
+        if (!disabledSlide) return;
+        disabledSlide.enabled = false;
         this._updateSlideList();
 
-        if (slideElement === currentSlide) {
+        if (disabledSlide === currentSlide) {
             if (this.config.slideNumber < this._slideAmount) {
                 this.slideNumber = this.config.slideNumber + 1;
-            } else {
+            } else {1
                 this.slideNumber = this.config.slideNumber - 1;
             }
         }
@@ -406,10 +403,22 @@ class Slides {
      * @param {String|Integer} slideId id or number of the slide
      */
     enableSlide(slideId) {
-        let slideElement = this.getSlide(slideId);
-        if (!slideElement) return;
-        slideElement.removeClass("invisible");
+        let enabledSlide = this.getSlide(slideId);
+        if (!enabledSlide) return;
+        enabledSlide.enabled = true;
         this._updateSlideList();
+    }
+
+    /**
+     * Get <header> element with additional information on the presentation.
+     * @return {Element} <header> element
+     */
+    get header() {
+        if (this._header.length > 0) {
+            return this._header[0];
+        } else {
+            return document.createElement("header");
+        }
     }
 
     /**
@@ -418,14 +427,11 @@ class Slides {
      * elements without an `invisible` CSS class.
      */
     _updateSlideList() {
-        this._slidesEnabled = [];
+        this._slidesEnabled = this._slidesAll.filter(slide => slide.enabled);
+        this._slidesById = {};
 
-        this._slides.each(index => {
-            let slide = $(this._slides.get(index));
-
-            if (!slide.hasClass("invisible")) {
-                this._slidesEnabled.push(slide);
-            }
+        this._slidesEnabled.forEach(slide => {
+            if (slide.id) this._slidesById[slide.id] = slide;
         });
 
         this._slideAmount = this._slidesEnabled.length;
@@ -437,6 +443,7 @@ class Slides {
      * later fill it with additional widgets.
      */
     _buildUiFrame() {
+        // Append navbar to container
         this.ui.navbar = $($.parseHTML(`
             <nav id="ls-navbar" class="navbar navbar-expand-md navbar-light sticky-top">
                 <span id="ls-title" class="navbar-brand navbar-text">
@@ -464,19 +471,72 @@ class Slides {
         `));
 
         this.ui.main = $($.parseHTML(`
-            <div id="ls-main" class="container-fluid"></div>
+            <div
+                id="ls-main"
+                style="
+                    flex-grow: 1;
+                    flex-shrink: 1;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-content: stretch"
+            ></div>
         `));
 
         this._container.append(this.ui.navbar);
         this._container.append(this.ui.main);
+
+        // Display presentation title in the navbar
+        if (this._container[0].dataset.title) this.title = this._container[0].dataset.title;
     }
 
     /**
      * Set the title in the navigation bar.
      * @param {String} title New Title
      */
-    setTitle(title) {
+    set title(title) {
         this.ui.navbar.find("#ls-title")[0].innerHTML = title;
+    }
+
+    /**
+     * Get the title from the navigation bar.
+     * @return {String} Current title
+     */
+    get title() {
+        return this.ui.navbar.find("#ls-title")[0].innerHTML;
+    }
+
+    /**
+     * Display the given DOM element as the main content in the UI. This is
+     * used by the slideshow and overview plugins to display the main UI.
+     *
+     * @param {Element} element DOM element to show
+     */
+    set uiMainContent(element) {
+        let oldContent = this.ui.main.find("*");
+
+        if ((oldContent.length === 0)
+             || (element.classList.contains("ls-no-fade") && oldContent.hasClass("ls-no-fade"))) {
+            // No content yet: Just display
+            this.ui.main[1].innerHTML = "";
+            this.ui.main[1].appendChild(element);
+        } else {
+            // Replace content: Fade out then fade in
+            this.ui.main.fadeOut("fast", () => {
+                // Don't use jQuery detach() and append() here as this will
+                // break updating the UI elements !?!?!
+                this.ui.main[1].innerHTML = "";
+                this.ui.main[1].appendChild(element);
+            }).delay(100).fadeIn("fast");
+        }
+    }
+
+    /**
+     * Get the currently visible main area DOM element.
+     * @return {Element} Currently visible main DOM element
+     */
+    get uiMainContent() {
+        return this.ui.main.find("#ls-main")[0];
     }
 }
 

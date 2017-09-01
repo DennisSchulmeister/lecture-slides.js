@@ -21,9 +21,52 @@ class OverviewMode {
     constructor(slides, events) {
         this._slides = slides;
         this._events = events;
+        this._ui = null;
 
         slides.registerUiMode("overview");
+
+        events.on("slides:ui:init", () => this._initUi());
+        events.on("slides:ui:mode:overview:enable", () => this._show());
+        events.on("slides:slideAmount", () => this._renderOverview());
     }
+
+    /**
+     * Create the basic UI layout.-
+     */
+    _initUi() {
+        let ui = $($.parseHTML(`
+            <div class="p-3">
+                <div class="container-fluid">
+                    <div id="ls-overview-header" class="row"></div>
+                    <div class="row">
+                        <div id="ls-overview-toc" class="col-md"></div>
+                        <div id="ls-overview-preview" class="col-md"></div>
+                    </div>
+                </div>
+            </div>
+        `));
+
+        this._ui = ui.filter("div")[0]
+        this._renderOverview();
+    }
+
+    /**
+     * Show UI in the main area.
+     */
+    _show() {
+        this._slides.uiMainContent = this._ui;
+    }
+
+    /**
+     * Render and display the slide overview.
+     */
+    _renderOverview() {
+        if (!this._ui) return;
+        $(this._ui).find("#ls-overview-header > *").detach()
+        $(this._ui).find("#ls-overview-header").append(this._slides.header);
+    }
+
+
 }
 
 export default OverviewMode;

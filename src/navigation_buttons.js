@@ -26,19 +26,19 @@ class NavigationButtons {
         this._uiInitialized = false;
         this._overviewModeEnabled = false;
 
-        events.on("slides:ui:init", () => this.initUi());
-        events.on("slides:showSlide", () => this.updateNavigationButtons());
-        events.on("slides:slideAmount", () => this.updateNavigationButtons());
-        events.on("slides:presentationMode", () => this.updatePresentationMode());
-        events.on("slides:ui:mode:overview:enable", () => this.updateOverviewMode(true));
-        events.on("slides:ui:mode:overview:disable", () => this.updateOverviewMode(false));
+        events.on("slides:ui:init", () => this._initUi());
+        events.on("slides:showSlide", () => this._updateNavigationButtons());
+        events.on("slides:slideAmount", () => this._updateNavigationButtons());
+        events.on("slides:presentationMode", () => this._updatePresentationMode());
+        events.on("slides:ui:mode:overview:enable", () => this._updateOverviewMode(true));
+        events.on("slides:ui:mode:overview:disable", () => this._updateOverviewMode(false));
     }
 
     /**
      * Event handler for `slides:ui:init`.
      * Creates the UI widgets for slide navigation.
      */
-    initUi() {
+    _initUi() {
         this._ui.all = $($.parseHTML(`
             <!-- Slide number / Slide amount -->
             <li id="ls-nav-numbers" class="nav-item navbar-text"></li>
@@ -142,7 +142,7 @@ class NavigationButtons {
      * Update the navigation buttons and visible slide numbers as soon as the
      * current slide number or amount of slides changes.
      */
-    updateNavigationButtons() {
+    _updateNavigationButtons() {
         if (!this._uiInitialized) return;
 
         // Update number and amount
@@ -170,7 +170,7 @@ class NavigationButtons {
     /**
      * Update state of the overview mode toggle button.
      */
-    updateOverviewMode(enabled) {
+    _updateOverviewMode(enabled) {
         this._overviewModeEnabled = enabled;
 
         if (enabled) {
@@ -183,7 +183,7 @@ class NavigationButtons {
     /**
      * Update state of the presentation mode toggle button.
      */
-    updatePresentationMode() {
+    _updatePresentationMode() {
         let presentationMode = this._slides.presentationMode;
 
         if (presentationMode) {

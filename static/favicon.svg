@@ -14,7 +14,7 @@
    viewBox="0 0 177.16535 177.16535"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
    sodipodi:docname="favicon.svg">
   <defs
      id="defs4" />
@@ -26,11 +26,11 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.3127167"
-     inkscape:cx="181.0672"
-     inkscape:cy="89.37841"
+     inkscape:cx="79.388398"
+     inkscape:cy="84.270764"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="true"
+     inkscape:current-layer="text4146-5"
+     showgrid="false"
      showguides="false"
      inkscape:window-width="2048"
      inkscape:window-height="1088"
@@ -57,7 +57,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -70,20 +70,93 @@
        transform="translate(163.99934,-0.14024339)"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:183.18566895px;line-height:125%;font-family:'Serifa Blk BT';-inkscape-font-specification:'Serifa Blk BT';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="text4146-5">
-      <path
-         inkscape:connector-curvature="0"
-         d="m 5.1742925,1028.9472 c 0,8.4079 -1.63985,14.4008 -4.91953998,17.9786 -3.22006002,3.6375 -8.85517002,5.4562 -16.90531952,5.4562 l -115.743293,0 c -8.28867,0 -14.31138,-1.8784 -18.06812,-5.6351 -3.6971,-3.6971 -5.54566,-9.6303 -5.54566,-17.7997 l 0,-129.8759 c 0,-7.57311 2.05727,-13.38711 6.17179,-17.442 4.17415,-4.11452 9.98815,-6.17178 17.44199,-6.17178 l 110.287083,0 c 8.5272,0 15.2058395,1.96781 20.0359295,5.90344 4.83009,3.876 7.24514,9.77945 7.24514,17.71034 z"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Linux Biolinum Keyboard';-inkscape-font-specification:'Linux Biolinum Keyboard Bold';fill:#87cdde"
-         id="path4151-8"
-         sodipodi:nodetypes="scssssscsscss" />
-    </g>
-    <g
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:183.18566895px;line-height:125%;font-family:'Serifa Blk BT';-inkscape-font-specification:'Serifa Blk BT';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       id="text4146">
-      <path
-         d="m 68.457288,930.41611 0,24.06101 9.839074,0 q 8.765721,0 12.164674,-3.04117 3.398953,-3.04117 3.398953,-11.4491 0,-9.74963 -3.488399,-12.70135 -3.488399,-3.04117 -10.196859,-3.04117 -7.871259,0 -9.839074,1.1628 -1.878369,1.1628 -1.878369,5.00898 z m 0,31.30615 0,31.0378 q 0,3.4884 2.146707,4.91954 2.236154,1.43114 9.034059,1.43114 12.790797,0 16.726426,-3.66729 3.93563,-3.66729 3.93563,-12.07523 0,-10.4652 -4.293414,-16.01086 -4.293414,-5.6351 -15.47418,-5.6351 l -12.075228,0 z m -8.855166,-44.27584 q 4.203968,0 10.912427,-0.26833 6.70846,-0.26834 8.676275,-0.26834 17.263102,0 24.866026,6.44012 7.60292,6.35067 7.60292,14.9375 0,5.45622 -3.66729,10.55465 -3.66729,5.00898 -9.123508,7.60292 20.840948,6.08233 20.840948,24.15045 0,10.28631 -9.39184,18.06812 -9.3024,7.78179 -28.175534,7.78179 -6.440121,0 -12.522458,-0.2683 -5.99289,-0.2684 -10.017966,-0.2684 l -9.839074,0.5367 -0.178893,-0.5367 q 1.252246,-8.58678 1.252246,-27.45992 l 0,-33.54229 q 0,-18.51535 -1.252246,-27.45997 l 0.178893,-0.53667 q 5.277321,0.53667 9.839074,0.53667 z M 31.605484,881.93631 q -8.229044,0 -12.70135,4.38286 -4.38286,4.38286 -4.38286,12.61191 l 0,124.24062 q 0,15.2059 17.08421,15.2059 l 104.741416,0 q 8.22904,0 11.71744,-3.4884 3.4884,-3.4884 3.4884,-11.7175 l 0,-124.24062 q 0,-16.99477 -15.20584,-16.99477 l -104.741416,0 z M 169.17363,1028.8069 q 0,12.6119 -4.91954,17.9786 -4.83009,5.4562 -16.90532,5.4562 l -115.743286,0 q -12.433012,0 -18.068118,-5.6351 -5.5456597,-5.5456 -5.5456597,-17.7997 l 0,-129.87582 q 0,-11.35966 6.1717827,-17.442 6.261229,-6.17178 17.441995,-6.17178 l 110.287076,0 q 12.7908,0 20.03593,5.90344 7.24514,5.814 7.24514,17.71034 l 0,129.87582 z"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Linux Biolinum Keyboard';-inkscape-font-specification:'Linux Biolinum Keyboard Bold'"
-         id="path4151" />
+      <rect
+         style="opacity:1;fill:#dbe3e2;fill-opacity:1;stroke:none;stroke-width:2.34375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect4562"
+         width="171.63483"
+         height="139.52449"
+         x="-161.23409"
+         y="895.85547" />
+      <rect
+         style="opacity:1;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:2.34375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect4658"
+         width="171.63483"
+         height="34.319523"
+         x="-161.23409"
+         y="895.85559" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.41514206px;line-height:27.3585701px;font-family:Webdings;-inkscape-font-specification:Webdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.93749994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="-180.89211"
+         y="789.4646"
+         id="text4670-6"
+         transform="scale(0.85667854,1.167299)"><tspan
+           sodipodi:role="line"
+           id="tspan4668-9"
+           x="-180.89211"
+           y="789.4646"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans;-inkscape-font-specification:sans;stroke-width:0.93749994px">LEARNING SLIDES</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.41514206px;line-height:27.3585701px;font-family:Webdings;-inkscape-font-specification:Webdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.93749994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="-181.52588"
+         y="788.73511"
+         id="text4670"
+         transform="scale(0.85667854,1.167299)"><tspan
+           sodipodi:role="line"
+           id="tspan4668"
+           x="-181.52588"
+           y="788.73511"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans;-inkscape-font-specification:sans;fill:#ff0000;stroke-width:0.93749994px">LEARNING SLIDES</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.75474167px;line-height:10.94342804px;font-family:Webdings;-inkscape-font-specification:Webdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.93749994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="-181.85623"
+         y="812.89001"
+         id="text4676"
+         transform="scale(0.85667854,1.167299)"><tspan
+           sodipodi:role="line"
+           x="-181.85623"
+           y="812.89001"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:2.18868542px;font-family:sans;-inkscape-font-specification:sans;stroke-width:0.93749994px"
+           id="tspan5140">cjsk q qjskysa asjkas ajks ajsk jaskjqkwj qq</tspan><tspan
+           sodipodi:role="line"
+           x="-181.85623"
+           y="823.83344"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:2.18868542px;font-family:sans;-inkscape-font-specification:sans;stroke-width:0.93749994px"
+           id="tspan5164">sd lwdadjsdjkad asddsad kjsadj kasda sjasd</tspan><tspan
+           sodipodi:role="line"
+           x="-181.85623"
+           y="834.77686"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:2.18868542px;font-family:sans;-inkscape-font-specification:sans;stroke-width:0.93749994px"
+           id="tspan5166">sdjksd wkjd wvbwux wuh an shjw uhaaed s</tspan><tspan
+           sodipodi:role="line"
+           x="-181.85623"
+           y="845.72028"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:2.18868542px;font-family:sans;-inkscape-font-specification:sans;stroke-width:0.93749994px"
+           id="tspan5168">sjdks jwk jwke wqjkewk jewk jqk jqek jeqej</tspan><tspan
+           sodipodi:role="line"
+           x="-181.85623"
+           y="856.66376"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:2.18868542px;font-family:sans;-inkscape-font-specification:sans;stroke-width:0.93749994px"
+           id="tspan5170">dkjee kw wj kwjewk jwke jw qjekdnw2i srw</tspan><tspan
+           sodipodi:role="line"
+           x="-181.85623"
+           y="867.60718"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:2.18868542px;font-family:sans;-inkscape-font-specification:sans;stroke-width:0.93749994px"
+           id="tspan5172">skjwidk wkjekw wkj kwj kwej wkjw ek we e</tspan><tspan
+           sodipodi:role="line"
+           x="-181.85623"
+           y="878.5506"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:2.18868542px;font-family:sans;-inkscape-font-specification:sans;stroke-width:0.93749994px"
+           id="tspan5174">wewee wjke wjkej wkjewkj kewj kwe wewk</tspan></text>
+      <rect
+         style="opacity:1;fill:none;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.34375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect5176"
+         width="171.63483"
+         height="139.52448"
+         x="-161.23409"
+         y="895.85559" />
     </g>
   </g>
 </svg>
