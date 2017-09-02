@@ -1,6 +1,6 @@
 {
     "name": "lecture-slides.js",
-    "version": "1.0.0",
+    "version": "1.0.0alpha",
     "description": "A simple JavaScript library for the browser to create slides for online learning. In contrast to other (more powerful) HTML presentation framework each slide may have additional explanations and side notes.",
     "main": "src/index.js",
     "author": "Dennis Schulmeister-Zimolong",
