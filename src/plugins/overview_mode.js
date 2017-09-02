@@ -15,25 +15,28 @@
 class OverviewMode {
     /**
      * Constructor
-     * @param {Slides} slides Main slides player object
-     * @param {Object} events jQuery object which triggers slide player events
+     * @param {SlideshowPlayer} player Main slides player object
      */
-    constructor(slides, events) {
-        this._slides = slides;
-        this._events = events;
+    constructor(player) {
+        this._player = player;
         this._ui = null;
 
-        slides.registerUiMode("overview");
-
-        events.on("slides:ui:init", () => this._initUi());
-        events.on("slides:ui:mode:overview:enable", () => this._show());
-        events.on("slides:slideAmount", () => this._renderOverview());
+        if (player.registerUiMode("overview")) {
+            this._uiInitialized = false;
+            player.init.bindFunction(() => this._initUi());
+        }
     }
 
     /**
      * Create the basic UI layout.-
      */
     _initUi() {
+        if (this._uiInitialized) return;
+        this._uiInitialized = true;
+
+        this._player.uiMode.bindFunction((newValue) => newValue === "overview" ? this._show() : false);
+        this._player.presentation.amountVisible.bindFunction(newValue => this._renderOverview(newValue));
+
         let ui = $($.parseHTML(`
             <div class="p-3">
                 <div class="container-fluid">
@@ -54,19 +57,26 @@ class OverviewMode {
      * Show UI in the main area.
      */
     _show() {
-        this._slides.uiMainContent = this._ui;
+        this._player.page.value = {
+            element: this._ui,
+            title: this._player.config.labelOverview,
+            fade: true,
+        };
     }
 
     /**
      * Render and display the slide overview.
+     * @param {Integer} amountVisible Amount of visible slides
      */
-    _renderOverview() {
+    _renderOverview(amountVisible) {
         if (!this._ui) return;
         $(this._ui).find("#ls-overview-header > *").detach()
-        $(this._ui).find("#ls-overview-header").append(this._slides.header);
+        $(this._ui).find("#ls-overview-header").html(this._player.presentation.headerHtml.value);
+
+        // TODO: List of slides
+        // TODO: Slide previews
+        // TODO: Keyboard navigation
     }
-
-
 }
 
 export default OverviewMode;

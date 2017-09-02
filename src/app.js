@@ -16,16 +16,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // Own assets
 import "./app.less";
 
-import Slides from "./slides.js";
-import ProgressBar from "./progressbar.js";
-import NavigationButtons from "./navigation_buttons.js";
-import SlideshowMode from "./slideshow_mode.js";
-import OverviewMode from "./overview_mode.js";
+import SlideshowPlayer from "./slideshow_player.js";
+import ProgressBar from "./plugins/progressbar.js";
+import NavigationButtons from "./plugins/navigation_buttons.js";
+import SlideshowMode from "./plugins/slideshow_mode.js";
+import OverviewMode from "./plugins/overview_mode.js";
 
-window.Slides = Slides;
+window.SlideshowPlayer = SlideshowPlayer;
 
 export default {
-    // Don't add "Slides" here! This list is used in the Slide class.
+    // Don't add "SlideshowPlayer" here! This list is used in the SlideshowPlayer class.
     ProgressBar,
     NavigationButtons,
     SlideshowMode,

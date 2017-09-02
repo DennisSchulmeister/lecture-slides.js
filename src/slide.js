@@ -44,7 +44,7 @@ class Slide {
      * @param {Element} html Raw slide definition
      * @return {Slide} New instance
      */
-    static createFromHTML(html) {
+    static createFromHtml(html) {
         let values = {
             html: html,
             id: html.id,

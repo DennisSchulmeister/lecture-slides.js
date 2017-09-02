@@ -15,45 +15,47 @@
 class ProgressBar {
     /**
      * Constructor
-     * @param {Slides} slides Main slides player object
-     * @param {Object} events jQuery object which triggers slide player events
+     * @param {SlideshowPlayer} player Main slides player object
      */
-    constructor(slides, events) {
-        this._slides = slides;
-        this._events = events;
+    constructor(player, events) {
+        this._player = player;
         this._ui = {};
         this._uiInitialized = false;
 
-        events.on("slides:ui:init", this.initUi.bind(this));
-        events.on("slides:showSlide", this.updateProgressBar.bind(this));
-        events.on("slides:slideAmount", this.updateProgressBar.bind(this));
+        this._uiInitialized = false;
+        player.init.bindFunction(() => this._initUi());
     }
 
     /**
      * Event handler for `slides:ui:init`.
      * Creates the UI widget for the progress bar.
      */
-    initUi() {
+    _initUi() {
+        if (this._uiInitialized) return;
+        this._uiInitialized = true;
+
+        this._player.slideNumber.bindFunction(() => this._updateProgressBar());
+        this._player.presentation.amountVisible.bindFunction(() => this._updateProgressBar());
+
         this._ui.progressbar = $($.parseHTML(`
             <div class="ls-progress">
                 <div class="ls-bar" role="progressbar" style="width: 33%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
         `));
 
-        $(this._slides.ui.navbar[0]).before(this._ui.progressbar);
-        this._uiInitialized = true;
+        $(this._player.ui.navbar[0]).before(this._ui.progressbar);
     }
 
     /**
      * Set the new progress bar percentage when the slide number or amount
      * of slides has changes.
      */
-    updateProgressBar() {
+    _updateProgressBar() {
         if (!this._uiInitialized) return;
         let percentage = 0;
 
-        if (this._slides.slideAmount > 0) {
-            percentage = this._slides.slideNumber / this._slides.slideAmount * 100;
+        if (this._player.presentation.amountVisible.value > 0) {
+            percentage = this._player.slideNumber.value / this._player.presentation.amountVisible.value * 100;
         }
 
         this._ui.progressbar.find(".ls-bar")[0].style.width = `${percentage}%`;

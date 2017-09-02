@@ -16,22 +16,15 @@
 class NavigationButtons {
     /**
      * Constructor
-     * @param {Slides} slides Main slides player object
-     * @param {Object} events jQuery object which triggers slide player events
+     * @param {SlideshowPlayer} player Main slides player object
      */
-    constructor(slides, events) {
-        this._slides = slides;
-        this._events = events;
+    constructor(player, events) {
+        this._player = player;
         this._ui = {};
         this._uiInitialized = false;
         this._overviewModeEnabled = false;
 
-        events.on("slides:ui:init", () => this._initUi());
-        events.on("slides:showSlide", () => this._updateNavigationButtons());
-        events.on("slides:slideAmount", () => this._updateNavigationButtons());
-        events.on("slides:presentationMode", () => this._updatePresentationMode());
-        events.on("slides:ui:mode:overview:enable", () => this._updateOverviewMode(true));
-        events.on("slides:ui:mode:overview:disable", () => this._updateOverviewMode(false));
+        player.init.bindFunction(() => this._initUi());
     }
 
     /**
@@ -39,6 +32,14 @@ class NavigationButtons {
      * Creates the UI widgets for slide navigation.
      */
     _initUi() {
+        if (this._uiInitialized) return;
+        this._uiInitialized = true;
+
+        this._player.uiMode.bindFunction((newValue) => newValue === "overview" ? this._updateOverviewMode(true) : this._updateOverviewMode(false));
+        this._player.slideNumber.bindFunction(() => this._updateNavigationButtons());
+        this._player.presentation.amountVisible.bindFunction(() => this._updateNavigationButtons());
+        this._player.presentationMode.bindFunction(() => this._updatePresentationMode());
+
         this._ui.all = $($.parseHTML(`
             <!-- Slide number / Slide amount -->
             <li id="ls-nav-numbers" class="nav-item navbar-text"></li>
@@ -46,35 +47,35 @@ class NavigationButtons {
             <!-- Overview -->
             <li class="nav-item ml-md-4">
                 <a id="ls-nav-overview-mode" class="nav-link" href="#">
-                    ${this._slides.config.labelOverview}
+                    ${this._player.config.labelOverview}
                 </a>
             </li>
 
             <!-- PresentationMode -->
             <li class="nav-item">
                 <a id="ls-nav-presentation-mode" class="nav-link" href="#">
-                    ${this._slides.config.labelPresentationMode}
+                    ${this._player.config.labelPresentationMode}
                 </a>
             </li>
 
             <!-- Previous -->
             <li class="nav-item ml-md-4">
                 <a id="ls-nav-prev" class="nav-link" href="#">
-                    ${this._slides.config.labelPrev}
+                    ${this._player.config.labelPrev}
                 </a>
             </li>
 
             <!-- Go To -->
             <li class="nav-item">
                 <form id="ls-nav-goto-form" class="form-inline">
-                    <input id="ls-nav-goto-id" class="form-control" type="text" placeholder="${this._slides.config.labelGoTo}" aria-label="${this._slides.config.labelGoTo}">
+                    <input id="ls-nav-goto-id" class="form-control" type="text" placeholder="${this._player.config.labelGoTo}" aria-label="${this._player.config.labelGoTo}">
                 </form>
             </li>
 
             <!-- Next -->
             <li class="nav-item">
                 <a id="ls-nav-next" class="nav-link" href="#">
-                    ${this._slides.config.labelNext}
+                    ${this._player.config.labelNext}
                 </a>
             </li>
         `));
@@ -92,9 +93,9 @@ class NavigationButtons {
          */
         $(this._ui.overviewMode).on("click", event => {
             if (this._overviewModeEnabled) {
-                this._slides.uiMode = "slideshow";
+                this._player.uiMode.value = "slideshow";
             } else {
-                this._slides.uiMode = "overview";
+                this._player.uiMode.value = "overview";
             }
 
             event.preventDefault();
@@ -104,23 +105,23 @@ class NavigationButtons {
          * Toggle presentation mode.
          */
         $(this._ui.presentationMode).on("click", () => {
-            this._slides.presentationMode = !this._slides.presentationMode;
+            this._player.presentationMode.value = !this._player.presentationMode.value;
         });
 
         /**
          * Go to previous slide.
          */
         this._ui.prev.on("click", () => {
-            if (this._slides.slideNumber < 2) return;
-            this._slides.slideNumber--;
+            if (this._player.slideNumber.value < 2) return;
+            this._player.slideNumber.value--;
         });
 
         /**
          * Go to next slide.
          */
         this._ui.next.on("click", () => {
-            if (this._slides.slideNumber >= this._slides.slideAmount) return;
-            this._slides.slideNumber++;
+            if (this._player.slideNumber.value >= this._player.presentation.amountVisible.value) return;
+            this._player.slideNumber.value++;
         });
 
         /**
@@ -131,10 +132,10 @@ class NavigationButtons {
             let slideId = parseInt(slideIdRaw);
             if (!slideId) slideId = slideIdRaw;
 
-            this._slides.gotoSlide(slideId);
+            this._player.gotoSlide(slideId);
         });
 
-        this._slides.ui.navbar.find("#ls-nav-ul").append(this._ui.all);
+        this._player.ui.navbar.find("#ls-nav-ul").append(this._ui.all);
         this._uiInitialized = true;
     }
 
@@ -146,8 +147,8 @@ class NavigationButtons {
         if (!this._uiInitialized) return;
 
         // Update number and amount
-        let slideNumber = this._slides.slideNumber;
-        let slideAmount = this._slides.slideAmount;
+        let slideNumber = this._player.slideNumber.value;
+        let slideAmount = this._player.presentation.amountVisible.value;
 
         this._ui.numbers.innerHTML = `${slideNumber} / ${slideAmount}`;
         this._ui.gotoId.val("");
@@ -184,7 +185,7 @@ class NavigationButtons {
      * Update state of the presentation mode toggle button.
      */
     _updatePresentationMode() {
-        let presentationMode = this._slides.presentationMode;
+        let presentationMode = this._player.presentationMode.value;
 
         if (presentationMode) {
             this._ui.presentationMode.classList.add("active");
