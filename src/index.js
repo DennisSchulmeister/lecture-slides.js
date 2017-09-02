@@ -14,8 +14,7 @@ import "bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Own assets
-import "./app.less";
-import additionalPlugins from "../plugins.js";
+import "./style.less";
 
 import SlideshowPlayer from "./slideshow_player.js";
 import ProgressBar from "./plugins/progressbar.js";
@@ -25,16 +24,10 @@ import OverviewMode from "./plugins/overview_mode.js";
 
 window.SlideshowPlayer = SlideshowPlayer;
 
-let plugins = {
+export default {
     // Don't add "SlideshowPlayer" here! This list is used in the SlideshowPlayer class.
     ProgressBar,
     NavigationButtons,
     SlideshowMode,
     OverviewMode,
 };
-
-for (let name in additionalPlugins) {
-    plugins[name] = additionalPlugins[name];
-}
-
-export default plugins;

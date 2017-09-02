@@ -1,46 +1,47 @@
 {
-    "name": "learning-slides",
+    "name": "lecture-slides.js",
     "version": "1.0.0",
-    "description": "A simple HTML template to create slides for online learning. In contrast to other (more powerfull) HTML presentation framework each slide may have additional explanations and side notes.",
-    "main": "index.js",
+    "description": "A simple JavaScript library for the browser to create slides for online learning. In contrast to other (more powerful) HTML presentation framework each slide may have additional explanations and side notes.",
+    "main": "src/index.js",
     "author": "Dennis Schulmeister-Zimolong",
     "license": "AGPL-3.0",
+    "homepage": "https://github.com/DennisSchulmeister/lecture-slides.js",
+    "bugs": "https://github.com/DennisSchulmeister/lecture-slides.js/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DennisSchulmeister/lecture-slides.js.git"
+    },
+    "keywords": [
+        "slideshow",
+        "slideshow-maker",
+        "e-learning"
+    ],
     "scripts": {
         "clean": "node scripts/clean.js",
-        "build:static": "npm run clean; node scripts/build-static.js",
-        "build:webpack": "webpack",
-        "build": "npm run build:static; npm run build:webpack",
-        "watch": "npm run build:static; watch-run -p 'static/**' npm run build:static",
-        "devserver": "npm run watch & webpack-dev-server --content-base build/",
-        "staticserver": "npm run build; http-server ./build"
+        "build": "npm run clean; webpack; prosecco lib/learning-slides.js > lib/learning-slides.min.js",
+        "build:dev": "npm run clean; webpack",
+        "dev": "webpack --progress --colors --watch --env dev"
     },
     "config": {
         "src_dir": "src",
-        "static_dir": "static",
-        "build_dir": "build",
-        "public_url": "",
-        "replace_variables_extensions": ".htm; .html"
+        "build_dir": "lib"
+    },
+    "dependencies": {
+        "bootstrap": "^4.0.0-beta",
+        "jquery": "^3.2.1",
+        "popper.js": "^1.11.0"
     },
     "devDependencies": {
-        "ajv": "^5.2.2",
-        "bootstrap": "4.0.0-beta",
-        "css-loader": "^0.28.5",
+        "css-loader": "^0.28.7",
         "extract-text-webpack-plugin": "^3.0.0",
         "file-loader": "^0.11.2",
-        "highlight.js": "^9.12.0",
         "html-loader": "^0.5.1",
-        "http-server": "^0.10.0",
-        "jquery": "^3.2.1",
         "less": "^2.7.2",
         "less-loader": "^4.0.5",
-        "popper.js": "^1.11.0",
+        "prosecco": "^0.1.2",
         "shelljs": "^0.7.8",
         "style-loader": "^0.18.2",
-        "uglify-es": "git://github.com/mishoo/UglifyJS2#harmony",
-        "uglifyjs-webpack-plugin": "^0.4.6",
         "url-loader": "^0.5.9",
-        "watch-run": "^1.2.5",
-        "webpack": "^3.5.5",
-        "webpack-dev-server": "^2.7.1"
+        "webpack": "^3.5.5"
     }
 }

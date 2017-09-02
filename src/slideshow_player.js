@@ -11,8 +11,8 @@
 
 import $ from "jquery";
 
-import plugins from "./app.js";
-import styles from "./app.less";
+import plugins from "./index.js";
+import styles from "./style.less";
 import themes from "../themes/";
 
 import ObservableValue from "./core/observable_value.js";
@@ -32,6 +32,8 @@ import Slide from "./slide.js";
  *   ============= ========== ==================================================
  *   NAME          DEFAULT    DESCRIPTION
  *   ============= ========== ==================================================
+ *   plugins       {}         External plugins which add additional features
+*   ------------- ---------- --------------------------------------------------
  *   embedded      false      Don't set window title and browser history
  *   ------------- ---------- --------------------------------------------------
  *   container     .slides    Query selector to find the parent element, which
@@ -120,6 +122,7 @@ class SlideshowPlayer {
         // Configuration values
         this.config = config || {};
 
+        if (!this.config.plugins) this.config.plugins = {};
         if (!this.config.embedded) this.config.embedded = false;
         if (!this.config.container) this.config.container = ".slides";
         if (!this.config.theme) this.config.theme = "white";
@@ -205,6 +208,10 @@ class SlideshowPlayer {
         this._plugins = {}
 
         for (let pluginName in plugins) {
+            this._plugins[pluginName] = new plugins[pluginName](this);
+        }
+
+        for (let pluginName in this.config.plugins) {
             this._plugins[pluginName] = new plugins[pluginName](this);
         }
     }
