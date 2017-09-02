@@ -17,9 +17,13 @@ html, body {
     display: flex;
     flex-direction: column;
 
-    // Fix cursor for disabled links
+    // Fix cursor for links
+    a {
+        cursor: pointer;
+    }
+
     .disabled {
-        cursor: initial;
+        cursor: initial !important;
     }
 
     //  No dotted border around links

@@ -46,21 +46,21 @@ class NavigationButtons {
 
             <!-- Overview -->
             <li class="nav-item ml-md-4">
-                <a id="ls-nav-overview-mode" class="nav-link" href="#">
+                <a id="ls-nav-overview-mode" class="nav-link">
                     ${this._player.config.labelOverview}
                 </a>
             </li>
 
             <!-- PresentationMode -->
             <li class="nav-item">
-                <a id="ls-nav-presentation-mode" class="nav-link" href="#">
+                <a id="ls-nav-presentation-mode" class="nav-link">
                     ${this._player.config.labelPresentationMode}
                 </a>
             </li>
 
             <!-- Previous -->
             <li class="nav-item ml-md-4">
-                <a id="ls-nav-prev" class="nav-link" href="#">
+                <a id="ls-nav-prev" class="nav-link">
                     ${this._player.config.labelPrev}
                 </a>
             </li>
@@ -74,7 +74,7 @@ class NavigationButtons {
 
             <!-- Next -->
             <li class="nav-item">
-                <a id="ls-nav-next" class="nav-link" href="#">
+                <a id="ls-nav-next" class="nav-link">
                     ${this._player.config.labelNext}
                 </a>
             </li>

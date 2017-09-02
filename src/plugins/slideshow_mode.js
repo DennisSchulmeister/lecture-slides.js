@@ -74,19 +74,10 @@ class SlideshowMode {
         if (!slide) return;
 
         let rendered = slide.renderSlide(this._player.presentationMode.value);
-        let title = "";
-
-        if (this._player.presentation.title.value != "" && slide.title != "") {
-            title = `${this._player.presentation.title.value}: ${slide.titlte}`;
-        } else if (this._player.presentation.title.value != "") {
-            title = this._player.presentation.title.value;
-        } else if (slide.title != "") {
-            title = slide.title;
-        }
 
         this._player.page.value = {
             element: rendered,
-            title: title,
+            title: slide.title,
             slideId: this._player.slideNumber,
             fade: fade,
         };

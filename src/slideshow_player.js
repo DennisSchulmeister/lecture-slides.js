@@ -185,6 +185,9 @@ class SlideshowPlayer {
         this.navbarTitle.bindFunction(newValue => this._updateTitle(newValue));
         this.page.bindFunction(newValue => this._updateMainContent(newValue));
 
+        this._lockHistory = false;
+        this.slideNumber.bindFunction((newValue, oldValue) => this._pushNavigationHistory(newValue, oldValue));
+
         // DOM elements for the user interface
         this.ui = {};
 
@@ -228,10 +231,12 @@ class SlideshowPlayer {
             this.presentation = Presentation.createFromHtml(this, presentationHtml);
             this._buildUiFrame();
 
+            let slideIdFromUrl = location.hash.slice(1);
+
             this.init.value = true;
             this.theme.value = this.config.theme;
             this.uiMode.value = this.config.mode;
-            this.slideNumber.value = this.config.slideNumber;
+            this.slideNumber.value = slideIdFromUrl.length > 0 ? slideIdFromUrl : this.config.slideNumber;
             this.presentationMode.value = this.config.presentationMode;
 
             this._container.removeClass("invisible");
@@ -376,6 +381,7 @@ class SlideshowPlayer {
      *     * {Boolean} fade: Cross-fade to the new page (optional)
      */
     _updateMainContent(page) {
+        // Show new content
         let element = page.element || document.createElement("div");
         let title = page.title || "";
         let slideId = page.slideId;
@@ -393,6 +399,41 @@ class SlideshowPlayer {
                 this.ui.main[1].innerHTML = "";
                 this.ui.main[1].appendChild(element);
             }).delay(100).fadeIn("fast");
+        }
+
+        // Update window title
+        if (this.presentation.title.value != "" && title != "") {
+            document.title = `${this.presentation.title.value}: ${title}`;
+        } else if (this.presentation.title.value != "") {
+            document.title = this.presentation.title.value;
+        } else if (title != "") {
+            document.title = title;
+        }
+    }
+
+    /**
+     * Push a new entry to the browser's navigation history. This is called
+     * automatically when the slide number has changed independent of the
+     * current plugin actually showing the slide. However the history is only
+     * written in slideshow mode.
+     *
+     * @param  {Integer} newSlideNumber New slide number
+     * @param  {Integer} oldSlideNumber Previous slide number or 0
+     */
+    _pushNavigationHistory(newSlideNumber, oldSlideNumber) {
+        if (this._lockHistory) return;
+        if (!this.uiMode.value === "slideshow") return;
+
+        let state = {
+            slideId: newSlideNumber,
+        };
+
+        let url = `#${newSlideNumber}`;
+
+        if (oldSlideNumber == 0) {
+            history.replaceState(JSON.stringify(state), "", url);
+        } else {
+            history.pushState(JSON.stringify(state), "", url);
         }
     }
 
@@ -420,16 +461,15 @@ class SlideshowPlayer {
      * @param {DOMEvent} event The captured click event
      */
     _onLinkClicked(event) {
-        ///TODO
-        // let target = event.target;
-        // while (target && target.nodeName != "A") target = target.parentNode;
-        // if (!target || target.nodeName != "A") return;
-        //
-        // let path = target.hash.slice(1);
-        // if (!path.length) return;
-        //
-        // event.preventDefault();
-        // if (this.active) this.goto(path);
+        let target = event.target;
+        while (target && target.nodeName != "A") target = target.parentNode;
+        if (!target || target.nodeName != "A") return;
+
+        let slideId = target.hash.slice(1);
+        if (!slideId.length) return;
+
+        event.preventDefault();
+        this.gotoSlide(slideId);
     }
 
     /**
@@ -445,21 +485,18 @@ class SlideshowPlayer {
      * @param {DOMEvent} event The captured popstate event
      */
     _onHistoryChanged(event) {
-        ///TODO
-        // if (!this.active) return
-        // let state = null;
-        //
-        // if (event.state) {
-        //     state = JSON.parse(event.state)
-        // } else {
-        //     state = {
-        //         path: this._getPathFromUrl(),
-        //         scrollX: 0,
-        //         scrollY: 0
-        //     };
-        // }
-        //
-        // this.goto(state.path, false, state.scrollX, state.scrollY);
+        let slideId = 1;
+
+        if (event.state) {
+            let state = JSON.parse(event.state)
+            slideId = state.slideId;
+        } else {
+            slideId = location.hash.slice(1);
+        }
+
+        this._lockHistory = true;
+        this.gotoSlide(slideId);
+        this._lockHistory = false;
     }
 }
 

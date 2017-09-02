@@ -84,11 +84,12 @@ class Presentation {
      */
     getSlide(slideId) {
         let slide = null;
+        let slideNumber = parseInt(slideId);
 
-        if (typeof slideId === 'string' || slideId instanceof String) {
-            slide = this._slidesById[slideId];
+        if (slideNumber.toString() === "NaN") {
+            slide = this._slidesById["" + slideId];
         } else {
-            slide = this._slidesEnabled[slideId - 1];
+            slide = this._slidesEnabled[slideNumber - 1];
         }
 
         if (!slide) {
