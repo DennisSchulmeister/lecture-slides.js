@@ -240,6 +240,12 @@ class SlideshowPlayer {
         if (!this._uiInitialized) {
             this._uiInitialized = true;
 
+            for (let pluginName in this._plugins) {
+                let plugin = this._plugins[pluginName];
+                if (!plugin.preprocessHtml) continue;
+                presentationHtml = plugin.preprocessHtml(presentationHtml);
+            }
+
             this.presentation = Presentation.createFromHtml(this, presentationHtml);
             this._buildUiFrame();
 
