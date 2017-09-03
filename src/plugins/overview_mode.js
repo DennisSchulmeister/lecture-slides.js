@@ -107,7 +107,7 @@ class OverviewMode {
         for (let slideNumber = 1; slideNumber <= this._player.presentation.amountVisible.value; slideNumber++) {
             let slide = this._player.presentation.getSlide(slideNumber);
 
-            let title = slide.title;
+            let title = slide.titleText;
             if (title === "") title = `${this._player.config.labelSlide} ${slideNumber}`;
 
             tocElement.append(`

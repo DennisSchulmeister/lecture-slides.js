@@ -77,7 +77,7 @@ class SlideshowMode {
 
         this._player.page.value = {
             element: rendered,
-            title: slide.title,
+            title: slide.titleText,
             slideId: this._player.slideNumber,
             fade: fade,
         };

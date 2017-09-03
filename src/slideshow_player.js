@@ -19,6 +19,7 @@ import themes from "../themes/";
 import ObservableValue from "./core/observable_value.js";
 import Presentation from "./presentation.js";
 import Slide from "./slide.js";
+import utils from "./core/utils.js";
 
 /**
  * This is the main entry class of Learning Slides. It must be instantiated
@@ -216,8 +217,10 @@ class SlideshowPlayer {
             this._plugins[pluginName] = new plugins[pluginName](this);
         }
 
-        for (pluginName in this.config.plugins) {
-            this._plugins[pluginName] = new plugins[pluginName](this);
+        for (let pluginName in this.config.plugins) {
+            let plugin = this.config.plugins[pluginName];
+            this._plugins[pluginName] = plugin;
+            if (plugin.setPlayer) plugin.setPlayer(this);
         }
     }
 
@@ -243,7 +246,7 @@ class SlideshowPlayer {
             for (let pluginName in this._plugins) {
                 let plugin = this._plugins[pluginName];
                 if (!plugin.preprocessHtml) continue;
-                presentationHtml = plugin.preprocessHtml(presentationHtml);
+                plugin.preprocessHtml(presentationHtml, utils);
             }
 
             this.presentation = Presentation.createFromHtml(this, presentationHtml);

@@ -31,7 +31,8 @@ class Slide {
 
         this.html = values.html || document.createElement("section");
         this.id = values.id || "";
-        this.title = values.title || "";
+        this.title = values.title || document.createElement("h1");
+        this.titleText = values.titleText || "";
         this.content = values.content || document.createElement("div");
         this.details = values.details || document.createElement("div");
         this.enabled = values.enabled || false;
@@ -56,9 +57,15 @@ class Slide {
         let content = html.find("> article");
         let details = html.find("> aside");
 
-        if (title.length) values.title = title[0].innerHTML;
+        if (title.length) values.title = title[0];
         if (content.length) values.content = content[0];
         if (details.length) values.details = details[0];
+
+        if (values.title) {
+            values.titleText = values.title.innerText;
+        } else if (html.attr("data-title")) {
+            values.titleText = html.attr("data-title");
+        }
 
         return new Slide(values);
     }
@@ -121,11 +128,9 @@ class Slide {
         // Add title
         let titleContainer = rendered.find(".ls-slide-title");
 
-        titleContainer.append($.parseHTML(
-            `<div class="col">
-                <h1>${this.title}</h1>
-            </div>`
-        ));
+        titleContainer.append(
+            $($.parseHTML("<div class='col'></div>")).append(this.title.cloneNode(true))
+        );
 
         // Add content
         let details = this.createDetailsElement();
