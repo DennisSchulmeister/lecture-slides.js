@@ -9,13 +9,14 @@
  */
 "use strict";
 
-// Bootstrap
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import ProgressBar from "./progressbar.js";
+import NavigationButtons from "./navigation_buttons.js";
+import SlideshowMode from "./slideshow_mode.js";
+import OverviewMode from "./overview_mode.js";
 
-// Own assets
-import "./style.less";
-
-// Library export of SlideshowPlayer
-import SlideshowPlayer from "./slideshow_player.js";
-export default SlideshowPlayer;
+export default {
+    ProgressBar,
+    NavigationButtons,
+    SlideshowMode,
+    OverviewMode,
+};

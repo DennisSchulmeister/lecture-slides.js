@@ -11,7 +11,7 @@
 
 import $ from "jquery";
 
-import plugins from "./index.js";
+import plugins from "./plugins/";
 import styles from "./style.less";
 import themes from "../themes/";
 
@@ -211,7 +211,7 @@ class SlideshowPlayer {
             this._plugins[pluginName] = new plugins[pluginName](this);
         }
 
-        for (let pluginName in this.config.plugins) {
+        for (pluginName in this.config.plugins) {
             this._plugins[pluginName] = new plugins[pluginName](this);
         }
     }

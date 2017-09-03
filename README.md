@@ -9,6 +9,18 @@ and start editing the html file. For a more extensive demonstration of all featu
 download the [demo presentations](https://www.github.com/DennisSchulmeister/ls-presentation-demos),
 instead.
 
+Screenshots
+-----------
+
+First things first. At least me, the first thing I'm looking for are screenshots.
+So here you go.
+
+![Screenshot 1](screenshot1.png)
+
+![Screenshot 2](screenshot2.png)
+
+Still here, I see? Great, now I can tell you what this is all about.
+
 What is it?
 -----------
 
