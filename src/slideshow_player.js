@@ -302,30 +302,35 @@ class SlideshowPlayer {
      */
     _buildUiFrame() {
         // Append navbar to container
+        let navbarClass = "fixed-top";
+        if (this.config.embedded) navbarClass = "sticky-top";
+
         this.ui.navbar = $($.parseHTML(`
-            <nav id="ls-navbar" class="navbar navbar-expand-md navbar-light sticky-top">
-                <span id="ls-title" class="navbar-brand navbar-text">
-                    <!-- Slide title -->
-                </span>
+            <div id="ls-main-top" class="${navbarClass}">
+                <nav id="ls-navbar" class="navbar navbar-expand-md navbar-light">
+                    <span id="ls-title" class="navbar-brand navbar-text">
+                        <!-- Slide title -->
+                    </span>
 
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#ls-navbar-toggled"
-                    aria-controls="ls-navbar-toggled"
-                    aria-expanded="false"
-                    aria-label="${this.config.labelNavigation}"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#ls-navbar-toggled"
+                        aria-controls="ls-navbar-toggled"
+                        aria-expanded="false"
+                        aria-label="${this.config.labelNavigation}"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <div id="ls-navbar-toggled" class="collapse navbar-collapse">
-                    <ul id="ls-nav-ul" class="navbar-nav ml-auto">
-                        <!-- Nav items -->
-                    </ul>
-                </div>
-            </nav>
+                    <div id="ls-navbar-toggled" class="collapse navbar-collapse">
+                        <ul id="ls-nav-ul" class="navbar-nav ml-auto">
+                            <!-- Nav items -->
+                        </ul>
+                    </div>
+                </nav>
+            </div>
         `));
 
         this.ui.main = $($.parseHTML(`
@@ -337,7 +342,7 @@ class SlideshowPlayer {
 
                     display: flex;
                     flex-direction: column;
-                    align-content: stretch"
+                    align-content: stretch";
             ></div>
         `));
 

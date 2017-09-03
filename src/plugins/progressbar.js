@@ -43,7 +43,7 @@ class ProgressBar {
             </div>
         `));
 
-        $(this._player.ui.navbar[0]).before(this._ui.progressbar);
+        $(this._player.ui.navbar).find("#ls-navbar").before(this._ui.progressbar);
     }
 
     /**
