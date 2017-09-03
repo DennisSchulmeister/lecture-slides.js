@@ -65,6 +65,8 @@ import Slide from "./slide.js";
  *   ------------- ---------- --------------------------------------------------
  *   label-       Navigation  Label for the responsive navbar toggle button
  *   Navigation
+ *   ------------- ---------- --------------------------------------------------
+ *   labelSlide    Slide      Label for slides without a title
  *   ============= ========== ==================================================
  *
  * This class only controls the presentation state (which slide is visible)
@@ -137,6 +139,7 @@ class SlideshowPlayer {
         if (!this.config.labelOverview) this.config.labelOverview = "Overview";
         if (!this.config.labelPresentationMode) this.config.labelPresentationMode = "Presentation Mode";
         if (!this.config.labelNavigation) this.config.labelNavigation = "Navigation";
+        if (!this.config.labelSlide) this.config.labelSlide = "Slide";
 
         // Presentation which holds the slides
         this.presentation = null;
@@ -518,6 +521,8 @@ class SlideshowPlayer {
 
         event.preventDefault();
         this.gotoSlide(slideId);
+
+        if (this.uiMode.value != "slideshow") this.uiMode.value = "slideshow";
     }
 
     /**
@@ -545,6 +550,8 @@ class SlideshowPlayer {
         this._lockHistory = true;
         this.gotoSlide(slideId);
         this._lockHistory = false;
+
+        if (this.uiMode.value != "slideshow") this.uiMode.value = "slideshow";
     }
 
     /**

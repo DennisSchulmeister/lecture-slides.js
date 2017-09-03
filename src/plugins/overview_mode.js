@@ -36,14 +36,37 @@ class OverviewMode {
 
         this._player.uiMode.bindFunction((newValue) => newValue === "overview" ? this._show() : false);
         this._player.presentation.amountVisible.bindFunction(newValue => this._renderOverview(newValue));
+        this._player.slideNumber.bindFunction(newValue => this._highlightActiveSlide(newValue));
 
         let ui = $($.parseHTML(`
-            <div class="p-3">
-                <div class="container-fluid">
-                    <div id="ls-overview-header" class="row"></div>
+            <!-- Main container -->
+            <div
+                style="
+                    flex-grow: 1;
+                    flex-shrink: 1;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-content: stretch;
+
+                    position: relative;"
+            >
+                <div
+                    class="container-fluid p-3"
+                    style="flex-grow: 1; flex-shrink: 1;"
+                >
                     <div class="row">
-                        <div id="ls-overview-toc" class="col-md"></div>
-                        <div id="ls-overview-preview" class="col-md"></div>
+                        <div id="ls-overview-header" class="col-md-4">
+                            <!-- Front matter -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="ls-overview-toc" class="col-md-4">
+                            <!-- ToC list -->
+                        </div>
+                        <div id="ls-overview-preview" class="col-md-8" style="position: relative;">
+                            <!-- Slide preview -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,17 +88,62 @@ class OverviewMode {
     }
 
     /**
-     * Render and display the slide overview.
+     * Render and display the slide overview on the left.
      * @param {Integer} amountVisible Amount of visible slides
      */
     _renderOverview(amountVisible) {
-        if (!this._ui) return;
+        // Front matter
+        if (!this._ui) return
+
         $(this._ui).find("#ls-overview-header > *").detach()
         $(this._ui).find("#ls-overview-header").html(this._player.presentation.headerHtml.value);
 
-        // TODO: List of slides
-        // TODO: Slide previews
-        // TODO: Keyboard navigation
+        // List of slides on the left
+        let tocElement = $(this._ui).find("#ls-overview-toc");
+
+        $(this._ui).find("#ls-overview-toc > *").detach()
+        $(this._ui).find("#ls-overview-preview > *").detach()
+
+        for (let slideNumber = 1; slideNumber <= this._player.presentation.amountVisible.value; slideNumber++) {
+            let slide = this._player.presentation.getSlide(slideNumber);
+
+            let title = slide.title;
+            if (title === "") title = `${this._player.config.labelSlide} ${slideNumber}`;
+
+            tocElement.append(`
+                <div data-slide="${slideNumber}" class="ls-overview-toc-entry">
+                    <a href="#${slideNumber}">${title}</a>
+                </div>
+            `);
+        }
+    }
+
+    /**
+     * Render a preview of the currently selected slide.
+     * @param  {Integer} slideNumber Current slide number
+     */
+    _highlightActiveSlide(slideNumber) {
+        // Highlight current slide on the ToC list
+        if (!this._ui) return;
+
+        $(this._ui).find("#ls-overview-toc a").removeClass("active");
+        $(this._ui).find(`#ls-overview-toc div[data-slide=${slideNumber}] > a`).addClass("active");
+
+        // Show slide preview on the right
+        $(this._ui).find("#ls-overview-preview > *").detach();
+
+        let slide = this._player.presentation.getSlide(slideNumber);
+        if (!slide) return;
+
+        let rendered = slide.renderSlide(true);
+        rendered.classList.add("ls-overview-slide-preview");
+        rendered.style.transform = "scale(0.75)";
+        rendered.style.transformOrigin = "0% 0%";
+        rendered.style.display = "none";
+        rendered.style.minHeight = "45em";
+
+        $(this._ui).find("#ls-overview-preview").append(rendered);
+        $(rendered).fadeIn("slow");
     }
 }
 
