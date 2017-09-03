@@ -37,8 +37,8 @@ in order to throw the slides on the wall.
 
 `lecture-slides.js` builds upon `bootstrap` and `jquery`. So the full power
 of HTML and these libraries can be used in order to create visually rich and
-stuning slides, much better than anything that PowerPoint, Keynote or Impress
-can ever, too. And since this is HTML it is very easy to make the slides
+stunning slides, much better than anything that PowerPoint, Keynote or Impress
+can ever do. And since this is HTML it is very easy to make the slides
 responsive so that they can be consumed on any screen, from the smallest smart
 phones up to the biggest TVs.
 
