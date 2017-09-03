@@ -10,6 +10,7 @@
 "use strict";
 
 import $ from "jquery";
+import Hammer from "hammerjs";
 
 import plugins from "./plugins/";
 import styles from "./style.less";
@@ -151,6 +152,7 @@ class SlideshowPlayer {
 
         this.slideNumber = new ObservableValue(0);
         this.presentationMode = new ObservableValue(false);
+        this.fadeOutColor = new ObservableValue("");
 
         this.uiMode.addValidator(newValue => {
             if (!this._uiModes[newValue]) {
@@ -246,6 +248,17 @@ class SlideshowPlayer {
             this.slideNumber.value = slideIdFromUrl.length > 0 ? slideIdFromUrl : this.config.slideNumber;
             this.presentationMode.value = this.config.presentationMode;
 
+            let hammer = new Hammer.Manager(this._container[0]);
+            hammer.add(new Hammer.Swipe({event: "swipe-left", direction: Hammer.DIRECTION_LEFT}));
+            hammer.add(new Hammer.Swipe({event: "swipe-right", direction: Hammer.DIRECTION_RIGHT}));
+            hammer.add(new Hammer.Tap({event: "double-tap", taps: 2}));
+            hammer.add(new Hammer.Press({event: "long-press", time: 750}));
+            hammer.on("swipe-left", event => this._handleTouchGesture(event));
+            hammer.on("swipe-right", event => this._handleTouchGesture(event));
+            hammer.on("double-tap", event => this._handleTouchGesture(event));
+            hammer.on("long-press", event => this._handleTouchGesture(event));
+
+            this._container[0].addEventListener("keyup", event => this._handleKeyUpEvent(event));
             this._container.removeClass("invisible");
         }
 
@@ -303,7 +316,12 @@ class SlideshowPlayer {
     _buildUiFrame() {
         // Append navbar to container
         let navbarClass = "fixed-top";
-        if (this.config.embedded) navbarClass = "sticky-top";
+        let mainStyle = "margin-top: 4rem";
+
+        if (this.config.embedded) {
+            navbarClass = "sticky-top";
+            mainStyle = "";
+        }
 
         this.ui.navbar = $($.parseHTML(`
             <div id="ls-main-top" class="${navbarClass}">
@@ -342,10 +360,28 @@ class SlideshowPlayer {
 
                     display: flex;
                     flex-direction: column;
-                    align-content: stretch";
+                    align-content: stretch;
+
+                    ${mainStyle}";
             ></div>
         `));
 
+        this.ui.fadeOut = $($.parseHTML(`
+            <div
+                id="ls-main-fadeout"
+                style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    min-width: 100%;
+                    min-height: 100%;
+                    z-index: -9999;
+
+                    transition: background-color 0.75s;"
+            ></div>
+        `));
+
+        this._container.append(this.ui.fadeOut);
         this._container.append(this.ui.navbar);
         this._container.append(this.ui.main);
 
@@ -509,6 +545,134 @@ class SlideshowPlayer {
         this._lockHistory = true;
         this.gotoSlide(slideId);
         this._lockHistory = false;
+    }
+
+    /**
+     * Handle keyboard events. The following keys are supported:
+     *
+     *   * Left Arrow: Previous slide
+     *   * Right Arrow, Space, Enter, N: Next slide
+     *   * ESC, O: Overview Mode
+     *   * P: Presentation Mode
+     *   * B: Fade to black
+     *   * W: Fade to white
+     *
+     * @param {KeyboardEvent} event The DOM event
+     */
+    _handleKeyUpEvent(event) {
+        switch (event.code) {
+            case "ArrowLeft":
+                // Previous slide
+                if (this.fadeOutColor.value === "") {
+                    if (this.slideNumber.value > 1) {
+                        this.slideNumber.value--;
+                    }
+                }
+                break;
+            case "ArrowRight":
+            case "Enter":
+            case "Space":
+            case "KeyN":
+                // Next slide
+                if (this.fadeOutColor.value === "") {
+                    if (this.slideNumber.value < this.presentation.amountVisible.value) {
+                        this.slideNumber.value++;
+                    }
+                }
+                break;
+            case "Escape":
+            case "KeyO":
+                // Toggle overview
+                if (this.fadeOutColor.value === "") {
+                    if (this.uiMode.value === "slideshow") {
+                        this.uiMode.value = "overview";
+                    } else if (this.uiMode.value === "overview") {
+                        this.uiMode.value = "slideshow";
+                    }
+                }
+                break;
+            case "KeyP":
+                // Toggle presentation mode
+                if (this.fadeOutColor.value === "") {
+                    this.presentationMode.value = !this.presentationMode.value;
+                }
+                break;
+            case "KeyB":
+                // Fade to black
+                this._toggleFadeOut("black");
+                break;
+            case "KeyW":
+                // Fade to white
+                this._toggleFadeOut("white");
+                break;
+        }
+    }
+
+    /**
+     * Handle touch gestures. The following gestures are supported:
+     *
+     *   * Swipe left: Next slide
+     *   * Swipe right: Previous slide
+     *   * Double Tap: Toggle presentation mode
+     * @param  {[HammerEvent]} event hammer.js touch gesture event
+     */
+    _handleTouchGesture(event) {
+        switch (event.type) {
+            case "swipe-left":
+                // Next slide
+                if (this.fadeOutColor.value === "") {
+                    if (this.slideNumber.value < this.presentation.amountVisible.value) {
+                        this.slideNumber.value++;
+                    }
+                }
+                break;
+            case "swipe-right":
+                // Previous slide
+                if (this.fadeOutColor.value === "") {
+                    if (this.slideNumber.value > 1) {
+                        this.slideNumber.value--;
+                    }
+                }
+                break;
+            case "double-tap":
+                // Toggle presentation mode
+                if (this.fadeOutColor.value === "") {
+                    this.presentationMode.value = !this.presentationMode.value;
+                }
+                break;
+            case "long-press":
+                // Toggle overview
+                if (this.fadeOutColor.value === "") {
+                    if (this.uiMode.value === "slideshow") {
+                        this.uiMode.value = "overview";
+                    } else if (this.uiMode.value === "overview") {
+                        this.uiMode.value = "slideshow";
+                    }
+                }
+                break;
+        }
+    }
+
+    /**
+     * This implements the fade to black and fade to white features. Calling
+     * this method will either fade the countent out or fades it back in.
+     *
+     * @param  {String} color CSS color declaration
+     */
+    _toggleFadeOut(color) {
+        let div = this.ui.fadeOut.filter("*")[0];
+
+        if (this.fadeOutColor.value != color) {
+            // Fade out content
+            this.fadeOutColor.value = color;
+            div.style.zIndex = 9999;
+            div.style.backgroundColor = color;
+        } else {
+            // Fade in content
+            this.fadeOutColor.value = "";
+            div.style.backgroundColor = "rgba(0,0,0,0)";
+            window.setTimeout(() => div.style.zIndex = -9999, 1000);
+        }
     }
 }
 

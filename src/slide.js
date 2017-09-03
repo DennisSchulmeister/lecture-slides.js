@@ -84,6 +84,7 @@ class Slide {
         let rendered = $($.parseHTML(`
             <!-- Main container -->
             <div
+                tabindex="0"
                 class="ls-slide-container ls-no-fade"
                 style="
                     flex-grow: 1;
