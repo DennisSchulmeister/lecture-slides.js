@@ -140,6 +140,7 @@ class OverviewMode {
         rendered.style.transform = "scale(0.75)";
         rendered.style.transformOrigin = "0% 0%";
         rendered.style.display = "none";
+        rendered.style.minWidth = "60em";
         rendered.style.minHeight = "45em";
 
         $(this._ui).find("#ls-overview-preview").append(rendered);

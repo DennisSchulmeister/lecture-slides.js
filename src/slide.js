@@ -74,12 +74,6 @@ class Slide {
      * @return {Element} A new HTML element with the rendered slide
      */
     renderSlide(presentationMode) {
-        //// TODO: 4:3, 16:9, free-form aspect ratios,
-        //// TODO: scaling according to aspect ratio
-        //// TODO: Different slide types (data-ratio="4:3")
-        //// TODO: Grid background pattern: <section data-background-grid>
-        //// TODO: Grid pos/size: <div data-grid="2,3 x 4,4">...</div>
-
         // Define basic layout structure
         let rendered = $($.parseHTML(`
             <!-- Main container -->

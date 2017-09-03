@@ -12,6 +12,7 @@
 
 @nav-bg: rgb(237, 237, 237);
 @progressbar-color: rgb(18, 183, 212);
+@border-color: lightgrey;
 
 :local(.style) {
     // Font settings
@@ -60,6 +61,30 @@
     }
 
     .ls-overview-slide-preview {
-        box-shadow: 0 0 5px lightgrey;
+        box-shadow: 0 0 5px @border-color;
+    }
+
+    // Slides
+    .ls-slide-title {
+        //color: darken(@progressbar-color, 20%);
+        color: rgb(157, 26, 26);
+        text-shadow: 1px 1px 1px #606060;
+    }
+    .ls-slide-content {
+        font-size: 140%;
+
+        // bootstrap medium
+        @media (max-width: 768px) {
+            order: -1;
+            font-size: 120%;
+        }
+    }
+
+    .ls-slide-details {
+        // bootstrap medium
+        @media (max-width: 768px) {
+            border-top: 1px solid @border-color;
+            padding-top: 1rem;
+        }
     }
 }
