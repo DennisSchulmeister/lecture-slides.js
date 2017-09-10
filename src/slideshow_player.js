@@ -260,6 +260,7 @@ class SlideshowPlayer {
             this.slideNumber.value = slideIdFromUrl.length > 0 ? slideIdFromUrl : this.config.slideNumber;
             this.presentationMode.value = this.config.presentationMode;
 
+            delete Hammer.defaults.cssProps.userSelect; // Allow text selection on Desktop
             let hammer = new Hammer.Manager(this._container[0]);
             hammer.add(new Hammer.Swipe({event: "swipe-left", direction: Hammer.DIRECTION_LEFT}));
             hammer.add(new Hammer.Swipe({event: "swipe-right", direction: Hammer.DIRECTION_RIGHT}));
@@ -576,6 +577,8 @@ class SlideshowPlayer {
      * @param {KeyboardEvent} event The DOM event
      */
     _handleKeyUpEvent(event) {
+        if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) return;
+
         switch (event.code) {
             case "ArrowLeft":
                 // Previous slide
