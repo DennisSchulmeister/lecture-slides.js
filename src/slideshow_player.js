@@ -526,6 +526,9 @@ class SlideshowPlayer {
         while (target && target.nodeName != "A") target = target.parentNode;
         if (!target || target.nodeName != "A") return;
 
+        let href = target.getAttribute("href");
+        if (href === null || !href.startsWith("#")) return;
+
         let slideId = target.hash.slice(1);
         if (!slideId.length) return;
 
