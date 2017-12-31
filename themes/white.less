@@ -48,15 +48,43 @@
     }
 
     // Slide overview
-    .ls-overview-toc-entry {
-        font-size: 160%;
+    @toc-entry-size-large: 160%;
+    @toc-entry-size-small: 130%;
+    @toc-entry-chapter-margin: 1.5rem;
 
+    .ls-overview-toc-entry {
         a {
+            font-size: @toc-entry-size-large;
             color: black;
         }
 
         a.active {
             color: @progressbar-color;
+        }
+    }
+
+    .ls-overview-toc-with-chapters {
+        .ls-overview-toc-entry-is-chapter {
+            a {
+                font-size: @toc-entry-size-large;
+            }
+
+            .ls-overview-toc-caption {
+                margin-left: @toc-entry-chapter-margin;
+                margin-bottom: @toc-entry-chapter-margin / 2;
+            }
+        }
+
+        .ls-overview-toc-entry-is-normal {
+            a {
+                font-size: @toc-entry-size-small;
+            }
+
+            margin-left: @toc-entry-chapter-margin;
+        }
+
+        .ls-overview-toc-entry-is-chapter:not(:first-child) {
+            margin-top: @toc-entry-chapter-margin;
         }
     }
 

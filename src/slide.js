@@ -14,7 +14,7 @@
  */
 class Slide {
     /**
-     * Constructor for direct constructor of a new slide. On most cases however
+     * Constructor for direct construction of a new slide. On most cases however
      * it is better to create a new slide courtesy of the `createFromHTML`
      * method.
      *
@@ -24,7 +24,9 @@ class Slide {
      *   * {String} title: title of the slide
      *   * {Element} content : DOM Node containing the slide content
      *   * {Element} details: DOM Node containing the explanation text
+     *   * {Element} caption: DOM Node containing the caption text for the overview
      *   * {Boolean} enabled: Whether the slide is visible
+     *   * {Boolean} chapter: Whether this is a chapter heading slide
      */
     constructor(values) {
         values = values || {};
@@ -35,7 +37,9 @@ class Slide {
         this.titleText = values.titleText || "";
         this.content = values.content || document.createElement("div");
         this.details = values.details || document.createElement("div");
+        this.caption = values.caption || document.createElement("div");
         this.enabled = values.enabled || false;
+        this.chapter = values.chapter || false;
     }
 
     /**
@@ -51,20 +55,25 @@ class Slide {
             id: html.id,
             enabled: !html.classList.contains("invisible"),
         }
-
         html = $(html);
         let title = html.find("> h1");
         let content = html.find("> article");
         let details = html.find("> aside");
+        let caption = html.find("> slide-caption");
 
         if (title.length) values.title = title[0];
         if (content.length) values.content = content[0];
         if (details.length) values.details = details[0];
+        if (caption.length) values.caption = caption[0];
 
         if (values.title) {
             values.titleText = values.title.innerText;
         } else if (html.attr("data-title")) {
             values.titleText = html.attr("data-title");
+        }
+
+        if (html.attr("data-chapter") != undefined) {
+            values.chapter = true;
         }
 
         return new Slide(values);

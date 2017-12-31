@@ -28,7 +28,7 @@ class OverviewMode {
     }
 
     /**
-     * Create the basic UI layout.-
+     * Create the basic UI layout.
      */
     _initUi() {
         if (this._uiInitialized) return;
@@ -100,9 +100,10 @@ class OverviewMode {
 
         // List of slides on the left
         let tocElement = $(this._ui).find("#ls-overview-toc");
+        let tocHasChapters = false;
 
-        $(this._ui).find("#ls-overview-toc > *").detach()
-        $(this._ui).find("#ls-overview-preview > *").detach()
+        $(this._ui).find("#ls-overview-toc > *").detach();
+        $(this._ui).find("#ls-overview-preview > *").detach();
 
         for (let slideNumber = 1; slideNumber <= this._player.presentation.amountVisible.value; slideNumber++) {
             let slide = this._player.presentation.getSlide(slideNumber);
@@ -110,11 +111,39 @@ class OverviewMode {
             let title = slide.titleText;
             if (title === "") title = `${this._player.config.labelSlide} ${slideNumber}`;
 
+            let caption = slide.caption.innerHTML;
+
+            if (caption != "") {
+                let captionStyle = "";
+                let captionClass = "";
+
+                if (slide.caption.attributes.style != undefined) captionStyle = slide.caption.attributes.style.value;
+                if (slide.caption.attributes.class != undefined) captionClass = slide.caption.attributes.class.value;
+
+                caption = `<div class="ls-overview-toc-caption ${captionClass}" style="${captionStyle}">${caption}</caption>`;
+            }
+
+            let extraClasses = "";
+
+            if (slide.chapter) {
+                tocHasChapters = true;
+                extraClasses = "ls-overview-toc-entry-is-chapter";
+            } else {
+                extraClasses = "ls-overview-toc-entry-is-normal";
+            }
+
             tocElement.append(`
-                <div data-slide="${slideNumber}" class="ls-overview-toc-entry">
+                <div data-slide="${slideNumber}" class="ls-overview-toc-entry ${extraClasses}">
                     <a href="#${slideNumber}">${title}</a>
+                    ${caption}
                 </div>
             `);
+        }
+
+        if (tocHasChapters) {
+            tocElement[0].classList.add("ls-overview-toc-with-chapters");
+        } else {
+            tocElement[0].classList.add("ls-overview-toc-without-chapters");
         }
     }
 
