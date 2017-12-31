@@ -80,7 +80,7 @@ import utils from "./core/utils.js";
  *
  *       * {Boolean} init: A flag indication that initialization of the player
  *         has started. The plugins have to bind to this in order to start up
- *         at the right time when the player is availabe and the presentation
+ *         at the right time when the player is available and the presentation
  *         data is available.
  *
  *       * {Boolean} ready: A flag indicating that initialization is over
@@ -639,6 +639,8 @@ class SlideshowPlayer {
      * @param  {[HammerEvent]} event hammer.js touch gesture event
      */
     _handleTouchGesture(event) {
+        if (event.pointerType === "mouse") return;
+
         switch (event.type) {
             case "swipe-left":
                 // Next slide
