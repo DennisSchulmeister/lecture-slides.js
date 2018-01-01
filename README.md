@@ -6,7 +6,7 @@ Getting Started
 
 Using `lecture-slides.js` is easy. Simply download the [template presentation](https://www.github.com/DennisSchulmeister/ls-presentation-template)
 and start editing the html file. For a more extensive demonstration of all features,
-download the [demo presentations](https://www.github.com/DennisSchulmeister/ls-presentation-demos),
+download the [demo presentations](https://www.github.com/DennisSchulmeister/ls-presentation-demo),
 instead.
 
 Screenshots
