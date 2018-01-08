@@ -22,7 +22,6 @@ class NavigationButtons {
         this._player = player;
         this._ui = {};
         this._uiInitialized = false;
-        this._overviewModeEnabled = false;
 
         player.init.bindFunction(() => this._initUi());
     }
@@ -35,28 +34,44 @@ class NavigationButtons {
         if (this._uiInitialized) return;
         this._uiInitialized = true;
 
-        this._player.uiMode.bindFunction((newValue) => newValue === "overview" ? this._updateOverviewMode(true) : this._updateOverviewMode(false));
+        this._player.uiMode.bindFunction((newValue) => this._updateModeButtons(newValue));
+        this._player.presentationMode.bindFunction(() => this._updatePresentationMode());
         this._player.slideNumber.bindFunction(() => this._updateNavigationButtons());
         this._player.presentation.amountVisible.bindFunction(() => this._updateNavigationButtons());
-        this._player.presentationMode.bindFunction(() => this._updatePresentationMode());
 
         this._ui.all = $($.parseHTML(`
+            <!-- View -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    ${this._player.config.labelViewMenu}
+                </a>
+                <div class="dropdown-menu">
+                    <!-- Overview -->
+                    <a id="ls-nav-overview-mode" class="dropdown-item">
+                        ${this._player.config.labelOverview}
+                    </a>
+
+                    <!-- Slides -->
+                    <a id="ls-nav-slideshow-mode" class="dropdown-item">
+                        ${this._player.config.labelSlideView}
+                    </a>
+
+                    <!-- Print -->
+                    <a id="ls-nav-print-mode" class="dropdown-item">
+                        ${this._player.config.labelPrintView}
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <!-- Presentation mode -->
+                    <a id="ls-nav-presentation-mode" class="dropdown-item">
+                        ${this._player.config.labelPresentationMode}
+                    </a>
+                </div>
+            </li>
+
             <!-- Slide number / Slide amount -->
-            <li id="ls-nav-numbers" class="nav-item navbar-text"></li>
-
-            <!-- Overview -->
-            <li class="nav-item ml-md-4">
-                <a id="ls-nav-overview-mode" class="nav-link">
-                    ${this._player.config.labelOverview}
-                </a>
-            </li>
-
-            <!-- PresentationMode -->
-            <li class="nav-item">
-                <a id="ls-nav-presentation-mode" class="nav-link">
-                    ${this._player.config.labelPresentationMode}
-                </a>
-            </li>
+            <li id="ls-nav-numbers" class="nav-item navbar-text ml-md-4"></li>
 
             <!-- Previous -->
             <li class="nav-item ml-md-4">
@@ -82,6 +97,8 @@ class NavigationButtons {
 
         this._ui.numbers = this._ui.all.filter("#ls-nav-numbers")[0];
         this._ui.overviewMode = this._ui.all.find("#ls-nav-overview-mode")[0];
+        this._ui.slideshowMode = this._ui.all.find("#ls-nav-slideshow-mode")[0];
+        this._ui.printMode = this._ui.all.find("#ls-nav-print-mode")[0];
         this._ui.presentationMode = this._ui.all.find("#ls-nav-presentation-mode")[0];
         this._ui.prev = $(this._ui.all.find("#ls-nav-prev")[0]);
         this._ui.gotoForm = $(this._ui.all.find("#ls-nav-goto-form")[0])
@@ -89,13 +106,33 @@ class NavigationButtons {
         this._ui.next = $(this._ui.all.find("#ls-nav-next")[0]);
 
         /**
-         * Toggle presentation and overiew UI mode
+         * Switch to overiew UI mode
          */
         $(this._ui.overviewMode).on("click", event => {
-            if (this._overviewModeEnabled) {
-                this._player.uiMode.value = "slideshow";
-            } else {
+            if (this._player.uiMode.value != "overview") {
                 this._player.uiMode.value = "overview";
+            }
+
+            event.preventDefault();
+        });
+
+        /**
+         * Switch to slideshow UI mode
+         */
+        $(this._ui.slideshowMode).on("click", event => {
+            if (this._player.uiMode.value != "slideshow") {
+                this._player.uiMode.value = "slideshow";
+            }
+
+            event.preventDefault();
+        });
+
+        /**
+         * Switch to print UI mode
+         */
+        $(this._ui.printMode).on("click", event => {
+            if (this._player.uiMode.value != "print") {
+                this._player.uiMode.value = "print";
             }
 
             event.preventDefault();
@@ -170,14 +207,25 @@ class NavigationButtons {
 
     /**
      * Update state of the overview mode toggle button.
+     * @param {String} uiMode Currently visible ui mode
      */
-    _updateOverviewMode(enabled) {
-        this._overviewModeEnabled = enabled;
+    _updateModeButtons(uiMode) {
+        let classActive = "active";
 
-        if (enabled) {
-            this._ui.overviewMode.classList.add("active");
-        } else  {
-            this._ui.overviewMode.classList.remove("active");
+        this._ui.overviewMode.classList.remove(classActive);
+        this._ui.slideshowMode.classList.remove(classActive);
+        this._ui.printMode.classList.remove(classActive);
+
+        switch (uiMode) {
+            case "overview":
+                this._ui.overviewMode.classList.add(classActive);
+                break;
+            case "slideshow":
+                this._ui.slideshowMode.classList.add(classActive);
+                break;
+            case "print":
+                this._ui.printMode.classList.add(classActive);
+                break;
         }
     }
 
@@ -186,11 +234,12 @@ class NavigationButtons {
      */
     _updatePresentationMode() {
         let presentationMode = this._player.presentationMode.value;
+        let classActive = "active";
 
         if (presentationMode) {
-            this._ui.presentationMode.classList.add("active");
+            this._ui.presentationMode.classList.add(classActive);
         } else  {
-            this._ui.presentationMode.classList.remove("active");
+            this._ui.presentationMode.classList.remove(classActive);
         }
     }
 }

@@ -13,6 +13,7 @@
 @nav-bg: rgb(237, 237, 237);
 @progressbar-color: rgb(18, 183, 212);
 @border-color: lightgrey;
+@print-border-color: rgb(170,170,170);
 
 :local(.style) {
     // Font settings
@@ -47,12 +48,12 @@
         }
     }
 
-    // Slide overview
+    // Table of Contents / Slide Overview
     @toc-entry-size-large: 160%;
     @toc-entry-size-small: 130%;
     @toc-entry-chapter-margin: 1.5rem;
 
-    .ls-overview-toc-entry {
+    .ls-toc-entry {
         a {
             font-size: @toc-entry-size-large;
             color: black;
@@ -63,19 +64,19 @@
         }
     }
 
-    .ls-overview-toc-with-chapters {
-        .ls-overview-toc-entry-is-chapter {
+    .ls-toc-with-chapters {
+        .ls-toc-entry-is-chapter {
             a {
                 font-size: @toc-entry-size-large;
             }
 
-            .ls-overview-toc-caption {
+            .ls-toc-caption {
                 margin-left: @toc-entry-chapter-margin;
                 margin-bottom: @toc-entry-chapter-margin / 2;
             }
         }
 
-        .ls-overview-toc-entry-is-normal {
+        .ls-toc-entry-is-normal {
             a {
                 font-size: @toc-entry-size-small;
             }
@@ -83,7 +84,7 @@
             margin-left: @toc-entry-chapter-margin;
         }
 
-        .ls-overview-toc-entry-is-chapter:not(:first-child) {
+        .ls-toc-entry-is-chapter:not(:first-child) {
             margin-top: @toc-entry-chapter-margin;
         }
     }
@@ -98,21 +99,66 @@
         color: rgb(157, 26, 26);
         text-shadow: 1px 1px 1px #606060;
     }
-    .ls-slide-content {
-        font-size: 140%;
 
-        // bootstrap medium
-        @media (max-width: 768px) {
-            order: -1;
-            font-size: 120%;
+    #ls-slideshow {
+        .ls-slide-content {
+            font-size: 140%;
+
+            // bootstrap medium
+            @media (max-width: 768px) {
+                order: -1;
+                font-size: 120%;
+            }
+        }
+
+        .ls-slide-details {
+            // bootstrap medium
+            @media (max-width: 768px) {
+                border-top: 1px solid @border-color;
+                padding-top: 1rem;
+            }
         }
     }
 
-    .ls-slide-details {
-        // bootstrap medium
-        @media (max-width: 768px) {
-            border-top: 1px solid @border-color;
+    // Print View
+    #ls-print {
+        .ls-slide-container {
+            border-top: 2px solid @print-border-color;
+        }
+
+        .ls-slide-details {
+            margin-top: 1rem;
             padding-top: 1rem;
+            border-top: 1px solid @print-border-color;
+        }
+
+        // .ls-slide-content {
+        //     font-size: 90%;
+        // }
+        // Reduce font-sizes as they look huge on paper
+        font-size: 85%;
+
+        h1 {
+            font-size: 1.6em;
+        }
+        h2 {
+            font-size: 1.2em;
+        }
+        h3 {
+            font-size: 1em;
+        }
+
+        .no-print {
+            display: none;
+        }
+
+        // Hack for Bootstraps tab pages
+        .tab-pane {
+            &:not(:first-child) {
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid @print-border-color;
+            }
         }
     }
 }

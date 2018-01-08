@@ -175,6 +175,110 @@ class Presentation {
         this.amountAll.value = this._slidesAll.length;
         this.amountVisible.value = this._slidesEnabled.length;
     }
+
+    /**
+     * This method renders a list of all slides (the Table of Contents) to
+     * a new HTML element which can be used to display the ToC at any place.
+     *
+     * The returned HTML element will have either one of the following classes
+     * to enable different styling for flat ToCs without chapters and nested
+     * ToCs with chapters.
+     *
+     *   * .ls-toc-with-chapters
+     *   * .ls-toc-without-chapters
+     *
+     * The contained ToC entries will either have the following classes to
+     * distinguish between the name of a slide or its captions:
+     *
+     *   * .ls-toc-entry
+     *   * .ls-toc-caption
+     *
+     * Additionally ToC entries will have either one of the following classes
+     * to distinguish between top-level and nested entries:
+     *
+     *   * .ls-toc-entry-is-normal
+     *   * .ls-toc-entry-is-chapter
+     *
+     * The final result will thus be something like this:
+     *
+     *   <div class="ls-toc-with-chapters">
+     *       <div data-slide="1" class="ls--toc-entry ls-toc-entry-is-chapter">
+     *           <a href="#1">Top-Level Chapter Slide</a>
+     *           <div class="ls-toc-caption">
+     *               Caption Text
+     *           </div>
+     *       </div>
+     *       <div data-slide="2" class="ls--toc-entry ls-toc-entry-is-normal">
+     *           <a href="#1">Sub-Level Normal Slide</a>
+     *           <div class="ls-toc-caption">
+     *               Caption Text
+     *           </div>
+     *       </div>
+     *       …
+     *   </div>
+     *
+     * And for a simple ToC withouth chapters and sub-chapters:
+     *
+     *   <div class="ls-toc-without-chapters">
+     *       <div data-slide="1" class="ls--toc-entry ls-toc-entry-is-normal">
+     *           <a href="#1">Slide Name</a>
+     *           <div class="ls-toc-caption">
+     *               Caption Text
+     *           </div>
+     *       </div>
+     *       …
+     *   </div>
+     *
+     * @return {Element} A new HTML element with the rendered ToC
+     */
+    renderTableOfContents() {
+        // List of slides on the left
+        let tocElement = $(document.createElement("div"));
+        let tocHasChapters = false;
+
+        for (let slideNumber = 1; slideNumber <= this.amountVisible.value; slideNumber++) {
+            let slide = this.getSlide(slideNumber);
+
+            let title = slide.titleText;
+            if (title === "") title = `${this._player.config.labelSlide} ${slideNumber}`;
+
+            let caption = slide.caption.innerHTML;
+
+            if (caption != "") {
+                let captionStyle = "";
+                let captionClass = "";
+
+                if (slide.caption.attributes.style != undefined) captionStyle = slide.caption.attributes.style.value;
+                if (slide.caption.attributes.class != undefined) captionClass = slide.caption.attributes.class.value;
+
+                caption = `<div class="ls-toc-caption ${captionClass}" style="${captionStyle}">${caption}</div>`;
+            }
+
+            let extraClasses = "";
+
+            if (slide.chapter) {
+                tocHasChapters = true;
+                extraClasses = "ls-toc-entry-is-chapter";
+            } else {
+                extraClasses = "ls-toc-entry-is-normal";
+            }
+
+            tocElement.append(`
+                <div data-slide="${slideNumber}" class="ls-toc-entry ${extraClasses}">
+                    <a href="#${slideNumber}">${title}</a>
+                    ${caption}
+                </div>
+            `);
+        }
+
+        if (tocHasChapters) {
+            tocElement[0].classList.add("ls-toc-with-chapters");
+        } else {
+            tocElement[0].classList.add("ls-toc-without-chapters");
+        }
+
+        return tocElement;
+    }
 }
 
 export default Presentation;

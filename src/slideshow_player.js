@@ -58,7 +58,16 @@ import utils from "./core/utils.js";
  *   ------------- ---------- --------------------------------------------------
  *   labelGoTo     Go to      Label for the "go to slide number" field
  *   ------------- ---------- --------------------------------------------------
- *   labelOverview Overview   Label for the "Overview" button
+ *   labelView-    View       Label for the "view" menu where the user switched
+ *   Menu                     between available view modes
+ *   ------------- ---------- --------------------------------------------------
+ *   labelOverview Overview   Label for the "Overview" mode
+ *   ------------- ---------- --------------------------------------------------
+ *   labelSlide-   Slides     Label for the "Slideshow" mode
+ *   View
+ *   ------------- ---------- --------------------------------------------------
+ *   labelPrint-   Print      Label for the "Print" mode
+ *   View
  *   ------------- ---------- --------------------------------------------------
  *   labelPresen-  Presen-    Label for the "Presentation mode" button
  *   tationMode    tation
@@ -86,7 +95,7 @@ import utils from "./core/utils.js";
  *       * {Boolean} ready: A flag indicating that initialization is over
  *         and the player is now running the slideshow.
  *
- *   * User Interace:
+ *   * User Interface:
  *
  *       * {String} theme: The name of the currently set UI theme.
  *
@@ -137,7 +146,10 @@ class SlideshowPlayer {
         if (!this.config.labelNext) this.config.labelNext = "Next";
         if (!this.config.labelPrev) this.config.labelPrev = "Previous";
         if (!this.config.labelGoTo) this.config.labelGoTo = "Go to";
+        if (!this.config.labelViewMenu) this.config.labelViewMenu = "View";
         if (!this.config.labelOverview) this.config.labelOverview = "Overview";
+        if (!this.config.labelSlideView) this.config.labelSlideView = "Slides";
+        if (!this.config.labelPrintView) this.config.labelPrintView = "Print";
         if (!this.config.labelPresentationMode) this.config.labelPresentationMode = "Presentation Mode";
         if (!this.config.labelNavigation) this.config.labelNavigation = "Navigation";
         if (!this.config.labelSlide) this.config.labelSlide = "Slide";
@@ -320,6 +332,23 @@ class SlideshowPlayer {
 
         let newNumber = this.presentation.getSlideNumber(slide);
         if (newNumber > 0) this.slideNumber.value = newNumber;
+    }
+
+    /**
+     * Returns the DOM element which needs to be accessed to get or set the
+     * current scroll position.
+     *
+     * @param {Boolen} eventListener: Return the object which is needed to
+     *   add an scroll-EventListener, instead.
+     * @return {Element} The DOM element to set or get the scroll position
+     */
+    getScrollElement(eventListener) {
+        if (!this.config.embedded) {
+            if (eventListener) return window;
+            else return document.documentElement;
+        } else {
+            return this._container;
+        }
     }
 
     /**
@@ -572,7 +601,9 @@ class SlideshowPlayer {
      *
      *   * Left Arrow: Previous slide
      *   * Right Arrow, Space, Enter, N: Next slide
-     *   * ESC, O: Overview Mode
+     *   * ESC, 1: Overview Mode
+     *   * 2: Slideshow Mode
+     *   * 3: Print Mode
      *   * P: Presentation Mode
      *   * B: Fade to black
      *   * W: Fade to white
@@ -603,13 +634,31 @@ class SlideshowPlayer {
                 }
                 break;
             case "Escape":
-            case "KeyO":
-                // Toggle overview
+            case "Digit1":
+            case "Numpad1":
+                // Switch to overview mode
                 if (this.fadeOutColor.value === "") {
-                    if (this.uiMode.value === "slideshow") {
+                    if (this.uiMode.value != "overview") {
                         this.uiMode.value = "overview";
-                    } else if (this.uiMode.value === "overview") {
+                    }
+                }
+                break;
+            case "Digit2":
+            case "Numpad2":
+                // Switch to slideshow mode
+                if (this.fadeOutColor.value === "") {
+                    if (this.uiMode.value != "slideshow") {
                         this.uiMode.value = "slideshow";
+                    }
+                }
+                break;
+            case "Key3":
+            case "Digit3":
+            case "Numpad3":
+                // Switch to print mode
+                if (this.fadeOutColor.value === "") {
+                    if (this.uiMode.value != "print") {
+                        this.uiMode.value = "print";
                     }
                 }
                 break;

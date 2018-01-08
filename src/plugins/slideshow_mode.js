@@ -28,7 +28,7 @@ class SlideshowMode {
     }
 
     /**
-     * Create the basic UI layout.-
+     * Create the basic UI layout.
      */
     _initUi() {
         if (this._uiInitialized) return;
@@ -37,6 +37,24 @@ class SlideshowMode {
         this._player.uiMode.bindFunction((newValue) => newValue === "slideshow" ? this._enable() : this._disable());
         this._player.slideNumber.bindFunction(() => this._update());
         this._player.presentationMode.bindFunction(() => this._update());
+
+        let ui = $($.parseHTML(`
+            <div
+                id="ls-slideshow"
+                style="
+                    flex-grow: 1;
+                    flex-shrink: 1;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-content: stretch;
+
+                    position: relative;"
+            >
+            </div>
+        `));
+
+        this._ui = ui.filter("div")[0]
     }
 
     /**
@@ -75,8 +93,11 @@ class SlideshowMode {
 
         let rendered = slide.renderSlide(this._player.presentationMode.value);
 
+        $(this._ui).find("*").detach()
+        $(this._ui).append(rendered);
+
         this._player.page.value = {
-            element: rendered,
+            element: this._ui,
             title: slide.titleText,
             slideId: this._player.slideNumber,
             fade: fade,
