@@ -226,7 +226,7 @@ class Slide {
         } else if (this.html.dataset.backgroundColor) {
             element.style.backgroundColor = this.html.dataset.backgroundColor;
         } else if (this.html.dataset.backgroundImage) {
-            element.style.background = `url(${this.html.dataset.backgroundImage}) no-repeat center center fixed`;
+            element.style.background = `url(${this.html.dataset.backgroundImage}) no-repeat center center`;
             element.style.backgroundSize = "cover";
         }
 
