@@ -19,8 +19,8 @@ function escapeHTML(html) {
 }
 
 /**
- * Take a multi-line text and return a string with the aproriate linebreak
- * sequence. The returnes string is one of these, depending on which one is
+ * Take a multi-line text and return a string with the apropriate linebreak
+ * sequence. The returns string is one of these, depending on which one is
  * first found:
  *
  *   * "\r\n": Windows style
@@ -87,7 +87,7 @@ function shiftLinesLeft(text) {
  * Remove any leading empty lines found inside the given text.
  *
  * @param  {String} text Original text
- * @return {String} Trimed text
+ * @return {String} Trimmed text
  */
 function removeLeadingLinebreaks(text) {
     let linebreak = determineLinebreaks(text);
