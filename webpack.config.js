@@ -1,6 +1,6 @@
 /*
  * lecture-slides.js (https://www.buzzlms.de)
- * © 2017  Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
+ * © 2017 – 2019 Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -37,24 +37,42 @@ let webpackConfig = {
     devtool: "source-map",
 
     module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: "css-loader?localIdentName=[name]__[local]___[hash:base64:5]",
-            },{
-                test: /\.less$/,
-                use:  [
-                    "css-loader?localIdentName=[name]__[local]___[hash:base64:5]",
+        rules: [{
+            test: /\.css$/,
+            use: extractCSS.extract({
+                use: [
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: "global",
+                            localIdentName: '[path][name]__[local]--[hash:base64:5]',
+                        },
+                    },
+                ],
+                fallback: "style-loader",
+            }),
+        }, {
+            test: /\.less$/,
+            use: extractCSS.extract({
+                use: [
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: "global",
+                            localIdentName: '[path][name]__[local]--[hash:base64:5]',
+                        },
+                    },
                     "less-loader",
                 ],
-            },{
-                test: /\.(svg|jpg|png|gif|eot|ttf|woff|woff2)$/,
-                use: "url-loader",
-            },{
-                test: /\.(htm|html)/,
-                use: "html-loader",
-            },
-        ],
+                fallback: "style-loader",
+            }),
+        },{
+            test: /\.(svg|jpg|png|gif|eot|ttf|woff|woff2)$/,
+            use: "url-loader",
+        },{
+            test: /\.(htm|html)/,
+            use: "html-loader",
+        },],
     },
 
     plugins: [
