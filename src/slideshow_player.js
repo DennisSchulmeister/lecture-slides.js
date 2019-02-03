@@ -52,8 +52,9 @@ import utils from "./core/utils.js";
  *   ------------- ---------- --------------------------------------------------
  *   slideNumber   1          Number of the currently visible slide
  *   ------------- ---------- --------------------------------------------------
- *   presentation- false      Whether to hide detail explanations to the slides
- *   Mode
+ *   presentation- both       `both`: Show slide and side text
+ *   Mode                     `slides-only`: Show slide without side text
+ *                            `text-only`: Show side text without slide
  *   ------------- ---------- --------------------------------------------------
  *   labelNext     Next       Label for the "go to next slide" button
  *   ------------- ---------- --------------------------------------------------
@@ -66,15 +67,16 @@ import utils from "./core/utils.js";
  *   ------------- ---------- --------------------------------------------------
  *   labelOverview Overview   Label for the "Overview" mode
  *   ------------- ---------- --------------------------------------------------
- *   labelSlide-   Slides     Label for the "Slideshow" mode
- *   View
+ *   labelSlides-  Slides     Label for the "Slides and Text" button
+ *   AndText       And Text
+ *   ------------- ---------- --------------------------------------------------
+ *   labelSlides-  Slides     Label for the "Slides Only" button
+ *   Only          Only
+ *   ------------- ---------- --------------------------------------------------
+ *   labelTextOnly Text Only  Label for the "Text Only" button
  *   ------------- ---------- --------------------------------------------------
  *   labelPrint-   Print      Label for the "Print" mode
  *   View
- *   ------------- ---------- --------------------------------------------------
- *   labelPresen-  Presen-    Label for the "Presentation Mode" button
- *   tationMode    tation
- *                 Mode
  *   ------------- ---------- --------------------------------------------------
  *   label-       Navigation  Label for the responsive navbar toggle button
  *   Navigation
@@ -145,16 +147,17 @@ class SlideshowPlayer {
         if (!this.config.mode) this.config.mode = "overview";
         if (!this.config.Linkmode) this.config.Linkmode = "slideshow";
         if (!this.config.slideNumber) this.config.slideNumber = 1;
-        if (!this.config.presentationMode) this.config.presentationMode = false;
+        if (!this.config.presentationMode) this.config.presentationMode = "both";
 
         if (!this.config.labelNext) this.config.labelNext = "Next";
         if (!this.config.labelPrev) this.config.labelPrev = "Previous";
         if (!this.config.labelGoTo) this.config.labelGoTo = "Go to";
         if (!this.config.labelViewMenu) this.config.labelViewMenu = "View";
         if (!this.config.labelOverview) this.config.labelOverview = "Overview";
-        if (!this.config.labelSlideView) this.config.labelSlideView = "Slides";
+        if (!this.config.labelSlidesAndText) this.config.labelSlidesAndText = "Slides and Text";
+        if (!this.config.labelSlidesOnly) this.config.labelSlidesOnly = "Slides Only";
+        if (!this.config.labelTextOnly) this.config.labelTextOnly = "Text Only";
         if (!this.config.labelPrintView) this.config.labelPrintView = "Print";
-        if (!this.config.labelPresentationMode) this.config.labelPresentationMode = "Presentation Mode";
         if (!this.config.labelNavigation) this.config.labelNavigation = "Navigation";
         if (!this.config.labelSlide) this.config.labelSlide = "Slide";
 
@@ -171,7 +174,7 @@ class SlideshowPlayer {
         this.page = new ObservableValue({});
 
         this.slideNumber = new ObservableValue(0);
-        this.presentationMode = new ObservableValue(false);
+        this.presentationMode = new ObservableValue("both");
         this.fadeOutColor = new ObservableValue("");
 
         this.uiMode.addValidator(newValue => {
@@ -611,9 +614,10 @@ class SlideshowPlayer {
      *   * Left Arrow: Previous slide
      *   * Right Arrow, Space, Enter, N: Next slide
      *   * ESC, 1: Overview Mode
-     *   * 2: Slideshow Mode
-     *   * 3: Print Mode
-     *   * P: Presentation Mode
+     *   * 2: Slideshow Mode (Slides and Text)
+     *   * 3, P: Slideshow Mode (Slides Only)
+     *   * 4: Slideshow Mode (Text Only)
+     *   * 5: Print Mode
      *   * B: Fade to black
      *   * W: Fade to white
      *
@@ -650,31 +654,64 @@ class SlideshowPlayer {
                     if (this.uiMode.value != "overview") {
                         this.uiMode.value = "overview";
                     }
+
+                    if (this.presentationMode.value != "") {
+                        this.presentationMode.value = "";
+                    }
                 }
                 break;
             case "Digit2":
             case "Numpad2":
-                // Switch to slideshow mode
+                // Switch to slideshow mode (slides and text)
                 if (this.fadeOutColor.value === "") {
                     if (this.uiMode.value != "slideshow") {
                         this.uiMode.value = "slideshow";
+                    }
+
+                    if (this.presentationMode.value != "both") {
+                        this.presentationMode.value = "both";
                     }
                 }
                 break;
             case "Key3":
             case "Digit3":
             case "Numpad3":
+            case "KeyP":
+                // Switch to slideshow mode (slides only)
+                if (this.fadeOutColor.value === "") {
+                    if (this.uiMode.value != "slideshow") {
+                        this.uiMode.value = "slideshow";
+                    }
+
+                    if (this.presentationMode.value != "slides-only") {
+                        this.presentationMode.value = "slides-only";
+                    }
+                }
+                break;
+
+            case "Key4":
+            case "Digit4":
+            case "Numpad4":
+                // Switch to slideshow mode (text only)
+                if (this.fadeOutColor.value === "") {
+                    if (this.uiMode.value != "slideshow") {
+                        this.uiMode.value = "slideshow";
+                    }
+
+                    if (this.presentationMode.value != "text-only") {
+                        this.presentationMode.value = "text-only";
+                    }
+                }
+                break;
+
+            case "Key5":
+            case "Digit5":
+            case "Numpad5":
                 // Switch to print mode
                 if (this.fadeOutColor.value === "") {
                     if (this.uiMode.value != "print") {
                         this.uiMode.value = "print";
                     }
-                }
-                break;
-            case "KeyP":
-                // Toggle presentation mode
-                if (this.fadeOutColor.value === "") {
-                    this.presentationMode.value = !this.presentationMode.value;
                 }
                 break;
             case "KeyB":
@@ -719,7 +756,16 @@ class SlideshowPlayer {
             case "double-tap":
                 // Toggle presentation mode
                 if (this.fadeOutColor.value === "") {
-                    this.presentationMode.value = !this.presentationMode.value;
+                    switch (this.presentationMode.value) {
+                        case "both":
+                            this.presentationMode.value = "slides-only";
+                            break;
+                        case "slides-only":
+                            this.presentationMode.value = "text-only";
+                            break;
+                        default:
+                            this.presentationMode.value = "both";
+                    }
                 }
                 break;
             case "long-press":

@@ -147,7 +147,7 @@ class Slide {
 
         let mainContainer = rendered.find(".ls-slide-main");
 
-        if (presentationMode) {
+        if (presentationMode == "slides-only") {
             // Presentation mode, only slide unless there is no slide.
             // Then it's only the detail text.
             if (content.innerHTML != "") {
@@ -156,6 +156,16 @@ class Slide {
             } else {
                 details.classList.add("col-md");
                 mainContainer.append(details);
+            }
+        } else if (presentationMode == "text-only") {
+            // Text mode, only text unless there is no text.
+            // Then it's only the slide.
+            if (details.innerHTML != "") {
+                details.classList.add("col-md");
+                mainContainer.append(details);
+            } else {
+                content.classList.add("col-md");
+                mainContainer.append(content);
             }
         } else if (details.innerHTML != "" && content.innerHTML != "") {
             // Slide with detailed explanation

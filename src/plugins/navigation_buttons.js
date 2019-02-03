@@ -34,8 +34,8 @@ class NavigationButtons {
         if (this._uiInitialized) return;
         this._uiInitialized = true;
 
-        this._player.uiMode.bindFunction((newValue) => this._updateModeButtons(newValue));
-        this._player.presentationMode.bindFunction(() => this._updatePresentationMode());
+        this._player.uiMode.bindFunction((newValue) => this._updateModeButtons());
+        this._player.presentationMode.bindFunction(() => this._updateModeButtons());
         this._player.slideNumber.bindFunction(() => this._updateNavigationButtons());
         this._player.presentation.amountVisible.bindFunction(() => this._updateNavigationButtons());
 
@@ -48,24 +48,76 @@ class NavigationButtons {
                 <div class="dropdown-menu">
                     <!-- Overview -->
                     <a id="ls-nav-overview-mode" class="dropdown-item">
-                        ${this._player.config.labelOverview}
-                    </a>
-
-                    <!-- Slides -->
-                    <a id="ls-nav-slideshow-mode" class="dropdown-item">
-                        ${this._player.config.labelSlideView}
-                    </a>
-
-                    <!-- Print -->
-                    <a id="ls-nav-print-mode" class="dropdown-item">
-                        ${this._player.config.labelPrintView}
+                        <table>
+                            <tr>
+                                <td class="label">
+                                    ${this._player.config.labelOverview}
+                                </td>
+                                <td>
+                                    <kbd>1</kbd>
+                                </td>
+                            </tr>
+                        </table>
                     </a>
 
                     <div class="dropdown-divider"></div>
 
-                    <!-- Presentation mode -->
-                    <a id="ls-nav-presentation-mode" class="dropdown-item">
-                        ${this._player.config.labelPresentationMode}
+                    <!-- Slides and Text -->
+                    <a id="ls-nav-slides-and-text" class="dropdown-item">
+                        <table>
+                            <tr>
+                                <td class="label">
+                                    ${this._player.config.labelSlidesAndText}
+                                </td>
+                                <td>
+                                    <kbd>2</kbd>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
+
+                    <!-- Slides Only -->
+                    <a id="ls-nav-slides-only" class="dropdown-item">
+                        <table>
+                            <tr>
+                                <td class="label">
+                                    ${this._player.config.labelSlidesOnly}
+                                </td>
+                                <td>
+                                    <kbd>3</kbd>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
+
+                    <!-- Text Only -->
+                    <a id="ls-nav-text-only" class="dropdown-item">
+                        <table>
+                            <tr>
+                                <td class="label">
+                                    ${this._player.config.labelTextOnly}
+                                </td>
+                                <td>
+                                    <kbd>4</kbd>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <!-- Print -->
+                    <a id="ls-nav-print-mode" class="dropdown-item">
+                        <table>
+                            <tr>
+                                <td class="label">
+                                    ${this._player.config.labelPrintView}
+                                </td>
+                                <td>
+                                    <kbd>5</kbd>
+                                </td>
+                            </tr>
+                        </table>
                     </a>
                 </div>
             </li>
@@ -76,7 +128,7 @@ class NavigationButtons {
             <!-- Previous -->
             <li class="nav-item ml-md-4">
                 <a id="ls-nav-prev" class="nav-link">
-                    ${this._player.config.labelPrev}
+                    <kbd>🡄 ${this._player.config.labelPrev}</kbd>
                 </a>
             </li>
 
@@ -90,16 +142,17 @@ class NavigationButtons {
             <!-- Next -->
             <li class="nav-item">
                 <a id="ls-nav-next" class="nav-link">
-                    ${this._player.config.labelNext}
+                    <kbd>${this._player.config.labelNext} 🡆</kbd>
                 </a>
             </li>
         `));
 
         this._ui.numbers = this._ui.all.filter("#ls-nav-numbers")[0];
         this._ui.overviewMode = this._ui.all.find("#ls-nav-overview-mode")[0];
-        this._ui.slideshowMode = this._ui.all.find("#ls-nav-slideshow-mode")[0];
         this._ui.printMode = this._ui.all.find("#ls-nav-print-mode")[0];
-        this._ui.presentationMode = this._ui.all.find("#ls-nav-presentation-mode")[0];
+        this._ui.slidesAndText = this._ui.all.find("#ls-nav-slides-and-text")[0];
+        this._ui.slidesOnly = this._ui.all.find("#ls-nav-slides-only")[0];
+        this._ui.textOnly = this._ui.all.find("#ls-nav-text-only")[0];
         this._ui.prev = $(this._ui.all.find("#ls-nav-prev")[0]);
         this._ui.gotoForm = $(this._ui.all.find("#ls-nav-goto-form")[0])
         this._ui.gotoId = $(this._ui.all.find("#ls-nav-goto-id")[0])
@@ -117,17 +170,6 @@ class NavigationButtons {
         });
 
         /**
-         * Switch to slideshow UI mode
-         */
-        $(this._ui.slideshowMode).on("click", event => {
-            if (this._player.uiMode.value != "slideshow") {
-                this._player.uiMode.value = "slideshow";
-            }
-
-            event.preventDefault();
-        });
-
-        /**
          * Switch to print UI mode
          */
         $(this._ui.printMode).on("click", event => {
@@ -139,11 +181,11 @@ class NavigationButtons {
         });
 
         /**
-         * Toggle presentation mode.
+         * Toggle between slides and text.
          */
-        $(this._ui.presentationMode).on("click", () => {
-            this._player.presentationMode.value = !this._player.presentationMode.value;
-        });
+        $(this._ui.slidesAndText).on("click", () => this._player.presentationMode.value = "both");
+        $(this._ui.slidesOnly).on("click", () => this._player.presentationMode.value = "slides-only");
+        $(this._ui.textOnly).on("click", () => this._player.presentationMode.value = "text-only");
 
         /**
          * Go to previous slide.
@@ -207,39 +249,36 @@ class NavigationButtons {
 
     /**
      * Update state of the overview mode toggle button.
-     * @param {String} uiMode Currently visible ui mode
      */
-    _updateModeButtons(uiMode) {
+    _updateModeButtons() {
         let classActive = "active";
 
         this._ui.overviewMode.classList.remove(classActive);
-        this._ui.slideshowMode.classList.remove(classActive);
+        this._ui.slidesAndText.classList.remove(classActive);
+        this._ui.slidesOnly.classList.remove(classActive);
+        this._ui.textOnly.classList.remove(classActive);
         this._ui.printMode.classList.remove(classActive);
 
-        switch (uiMode) {
+        switch (this._player.uiMode.value) {
             case "overview":
                 this._ui.overviewMode.classList.add(classActive);
-                break;
-            case "slideshow":
-                this._ui.slideshowMode.classList.add(classActive);
                 break;
             case "print":
                 this._ui.printMode.classList.add(classActive);
                 break;
-        }
-    }
-
-    /**
-     * Update state of the presentation mode toggle button.
-     */
-    _updatePresentationMode() {
-        let presentationMode = this._player.presentationMode.value;
-        let classActive = "active";
-
-        if (presentationMode) {
-            this._ui.presentationMode.classList.add(classActive);
-        } else  {
-            this._ui.presentationMode.classList.remove(classActive);
+            case "slideshow":
+                switch (this._player.presentationMode.value) {
+                    case "both":
+                        this._ui.slidesAndText.classList.add(classActive);
+                        break;
+                    case "slides-only":
+                        this._ui.slidesOnly.classList.add(classActive);
+                        break;
+                    case "text-only":
+                        this._ui.textOnly.classList.add(classActive);
+                        break;
+                }
+                break;
         }
     }
 }
