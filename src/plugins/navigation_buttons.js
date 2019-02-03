@@ -119,6 +119,36 @@ class NavigationButtons {
                             </tr>
                         </table>
                     </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <!-- Fade to White -->
+                    <a id="ls-nav-fade-to-white" class="dropdown-item">
+                        <table>
+                            <tr>
+                                <td class="label">
+                                    ${this._player.config.labelFadeToWhite}
+                                </td>
+                                <td>
+                                    <kbd>W</kbd>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
+
+                    <!-- Fade to Black -->
+                    <a id="ls-nav-fade-to-black" class="dropdown-item">
+                        <table>
+                            <tr>
+                                <td class="label">
+                                    ${this._player.config.labelFadeToBlack}
+                                </td>
+                                <td>
+                                    <kbd>B</kbd>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
                 </div>
             </li>
 
@@ -153,6 +183,8 @@ class NavigationButtons {
         this._ui.slidesAndText = this._ui.all.find("#ls-nav-slides-and-text")[0];
         this._ui.slidesOnly = this._ui.all.find("#ls-nav-slides-only")[0];
         this._ui.textOnly = this._ui.all.find("#ls-nav-text-only")[0];
+        this._ui.fadeToWhite = this._ui.all.find("#ls-nav-fade-to-white")[0];
+        this._ui.fadeToBlack = this._ui.all.find("#ls-nav-fade-to-black")[0];
         this._ui.prev = $(this._ui.all.find("#ls-nav-prev")[0]);
         this._ui.gotoForm = $(this._ui.all.find("#ls-nav-goto-form")[0])
         this._ui.gotoId = $(this._ui.all.find("#ls-nav-goto-id")[0])
@@ -212,6 +244,12 @@ class NavigationButtons {
                 this._player.presentationMode.value = "text-only";
             }
         });
+
+        /**
+         * Fade to white or black
+         */
+        $(this._ui.fadeToWhite).on("click", () => this._player.toggleFadeOut("white", "black"));
+        $(this._ui.fadeToBlack).on("click", () => this._player.toggleFadeOut("black", "white"));
 
         /**
          * Go to previous slide.

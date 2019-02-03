@@ -78,6 +78,16 @@ import utils from "./core/utils.js";
  *   labelPrint-   Print      Label for the "Print" mode
  *   View
  *   ------------- ---------- --------------------------------------------------
+ *   labelFade-    Fade to    Label for the "Fade to White" button
+ *   ToWhite       White
+ *   ------------- ---------- --------------------------------------------------
+ *   labelFade-    Fade to    Label for the "Fade to Black" button
+ *   ToBlack       Black
+ *   ------------- ---------- --------------------------------------------------
+ *   labelFade     Go back    Label for the "Go back to the slides" link,
+ *   Back          to the     which appears when the slides are faded out
+ *                 slides
+ *   ------------- ---------- --------------------------------------------------
  *   label-       Navigation  Label for the responsive navbar toggle button
  *   Navigation
  *   ------------- ---------- --------------------------------------------------
@@ -158,6 +168,9 @@ class SlideshowPlayer {
         if (!this.config.labelSlidesOnly) this.config.labelSlidesOnly = "Slides Only";
         if (!this.config.labelTextOnly) this.config.labelTextOnly = "Text Only";
         if (!this.config.labelPrintView) this.config.labelPrintView = "Print";
+        if (!this.config.labelFadeToWhite) this.config.labelFadeToWhite = "Fade to White";
+        if (!this.config.labelFadeToBlack) this.config.labelFadeToBlack = "Fade to Black";
+        if (!this.config.labelFadeBack) this.config.labelFadeBack = "Click to go back to the slides";
         if (!this.config.labelNavigation) this.config.labelNavigation = "Navigation";
         if (!this.config.labelSlide) this.config.labelSlide = "Slide";
 
@@ -424,15 +437,22 @@ class SlideshowPlayer {
             <div
                 id="ls-main-fadeout"
                 style="
-                    position: absolute;
+                    position: fixed;
                     top: 0;
                     left: 0;
                     min-width: 100%;
                     min-height: 100%;
                     z-index: -9999;
+                    background: rgba(0,0,0,0);
+                    color: rgba(0,0,0,0);
 
-                    transition: background-color 0.75s;"
-            ></div>
+                    transition: background-color 0.75s, color 0.75s;"
+            >
+                <!-- Show slides again -->
+                <div style="margin: 1em;">
+                    ${this.config.labelFadeBack}
+                </div>
+            </div>
         `));
 
         this._container.append(this.ui.fadeOut);
@@ -716,11 +736,11 @@ class SlideshowPlayer {
                 break;
             case "KeyB":
                 // Fade to black
-                this._toggleFadeOut("black");
+                this.toggleFadeOut("black", "white");
                 break;
             case "KeyW":
                 // Fade to white
-                this._toggleFadeOut("white");
+                this.toggleFadeOut("white", "black");
                 break;
         }
     }
@@ -785,20 +805,25 @@ class SlideshowPlayer {
      * This implements the fade to black and fade to white features. Calling
      * this method will either fade the countent out or fades it back in.
      *
-     * @param  {String} color CSS color declaration
+     * @param  {String} color1 CSS color declaration for background
+     * @param  {String} color2 CSS color declaration for text
      */
-    _toggleFadeOut(color) {
+    toggleFadeOut(color1, color2) {
         let div = this.ui.fadeOut.filter("*")[0];
+        div.addEventListener("click", () => this.toggleFadeOut());
 
-        if (this.fadeOutColor.value != color) {
+        if (color1 && this.fadeOutColor.value != color1) {
             // Fade out content
-            this.fadeOutColor.value = color;
+            this.fadeOutColor.value = color1;
+            div.style.backgroundColor = color1;
+            div.style.color = color2;
             div.style.zIndex = 9999;
-            div.style.backgroundColor = color;
+            window.setTimeout(() => div.style.zIndex = 9999, 1000);     /* workaround for sometimes missing zIndex */
         } else {
             // Fade in content
             this.fadeOutColor.value = "";
             div.style.backgroundColor = "rgba(0,0,0,0)";
+            div.style.color = "rgba(0,0,0,0)";
             window.setTimeout(() => div.style.zIndex = -9999, 1000);
         }
     }
