@@ -183,9 +183,35 @@ class NavigationButtons {
         /**
          * Toggle between slides and text.
          */
-        $(this._ui.slidesAndText).on("click", () => this._player.presentationMode.value = "both");
-        $(this._ui.slidesOnly).on("click", () => this._player.presentationMode.value = "slides-only");
-        $(this._ui.textOnly).on("click", () => this._player.presentationMode.value = "text-only");
+        $(this._ui.slidesAndText).on("click", () => {
+            if (this._player.uiMode.value != "slideshow") {
+                this._player.uiMode.value = "slideshow";
+            }
+
+            if (this._player.presentationMode.value != "both") {
+                this._player.presentationMode.value = "both";
+            }
+        });
+
+        $(this._ui.slidesOnly).on("click", () => {
+            if (this._player.uiMode.value != "slideshow") {
+                this._player.uiMode.value = "slideshow";
+            }
+
+            if (this._player.presentationMode.value != "slides-only") {
+                this._player.presentationMode.value = "slides-only";
+            }
+        });
+
+        $(this._ui.textOnly).on("click", () => {
+            if (this._player.uiMode.value != "slideshow") {
+                this._player.uiMode.value = "slideshow";
+            }
+
+            if (this._player.presentationMode.value != "text-only") {
+                this._player.presentationMode.value = "text-only";
+            }
+        });
 
         /**
          * Go to previous slide.
