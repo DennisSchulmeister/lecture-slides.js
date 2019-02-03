@@ -16,6 +16,16 @@
 @print-border-color: rgb(170,170,170);
 
 :local(.style) {
+    // Mixin for hyphenated and justified text content
+    .justified-text-mixin {
+        text-align: justify;
+        hyphens: auto;
+
+        h1, h2, h3, h4, h5, h6, source-code, pre {
+            text-align: left;
+        }
+    }
+
     // Font settings
     font-family: 'Raleway', sans-serif;
 
@@ -52,6 +62,10 @@
     @toc-entry-size-large: 160%;
     @toc-entry-size-small: 130%;
     @toc-entry-chapter-margin: 1.5rem;
+
+    #ls-overview-header {
+        .justified-text-mixin;
+    }
 
     .ls-toc-entry {
         a {
@@ -101,6 +115,8 @@
     }
 
     #ls-slideshow {
+        .justified-text-mixin;
+
         .ls-slide-content {
             font-size: 140%;
 
@@ -122,6 +138,8 @@
 
     // Print View
     #ls-print {
+        .justified-text-mixin;
+
         .ls-slide-container {
             border-top: 2px solid @print-border-color;
         }
