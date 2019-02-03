@@ -47,6 +47,9 @@ import utils from "./core/utils.js";
  *                            `overview`: Show an overview of all slides
  *                            `slideshow`: Immediately start the presentation
  *   ------------- ---------- --------------------------------------------------
+ *   linkMode      slideshow  UI mode to use when a slide is called by an
+ *                            external direct link
+ *   ------------- ---------- --------------------------------------------------
  *   slideNumber   1          Number of the currently visible slide
  *   ------------- ---------- --------------------------------------------------
  *   presentation- false      Whether to hide detail explanations to the slides
@@ -69,7 +72,7 @@ import utils from "./core/utils.js";
  *   labelPrint-   Print      Label for the "Print" mode
  *   View
  *   ------------- ---------- --------------------------------------------------
- *   labelPresen-  Presen-    Label for the "Presentation mode" button
+ *   labelPresen-  Presen-    Label for the "Presentation Mode" button
  *   tationMode    tation
  *                 Mode
  *   ------------- ---------- --------------------------------------------------
@@ -140,6 +143,7 @@ class SlideshowPlayer {
         if (!this.config.container) this.config.container = ".slides";
         if (!this.config.theme) this.config.theme = "white";
         if (!this.config.mode) this.config.mode = "overview";
+        if (!this.config.Linkmode) this.config.Linkmode = "slideshow";
         if (!this.config.slideNumber) this.config.slideNumber = 1;
         if (!this.config.presentationMode) this.config.presentationMode = false;
 
@@ -268,9 +272,14 @@ class SlideshowPlayer {
 
             this.init.value = true;
             this.theme.value = this.config.theme;
-            this.uiMode.value = this.config.mode;
             this.slideNumber.value = slideIdFromUrl.length > 0 ? slideIdFromUrl : this.config.slideNumber;
             this.presentationMode.value = this.config.presentationMode;
+
+            if (slideIdFromUrl) {
+                this.uiMode.value = this.config.linkMode;
+            } else {
+                this.uiMode.value = this.config.mode;
+            }
 
             delete Hammer.defaults.cssProps.userSelect; // Allow text selection on Desktop
             let hammer = new Hammer.Manager(this._container[0]);
@@ -461,7 +470,7 @@ class SlideshowPlayer {
 
     /**
      * Switch the currently visible content of the main area. At least a DOM
-     * element with the content must be given. Optionaly the window title may
+     * element with the content must be given. Optionally the window title may
      * be changed and a slide ID for backwards navigation can be remembered.
      *
      * @param {Object} page Page definition of the new main content:
@@ -569,12 +578,12 @@ class SlideshowPlayer {
 
     /**
      * DOM event handler for the popstate event which is triggered by the
-     * browser everytime the navigation history inside the same page has
+     * browser every time the navigation history inside the same page has
      * changed. Usually this means that the user clicked to back or forward
      * buttons of the browser or window.history has been changed via some
      * javascript code.
      *
-     * This event causes the player to goto a new slide whose number or
+     * This event causes the player to go to a new slide whose number or
      * id was given in the hash tag of the URL.
      *
      * @param {DOMEvent} event The captured popstate event
