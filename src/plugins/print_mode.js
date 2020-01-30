@@ -171,6 +171,9 @@ class PrintMode {
         // Mess with the Bootstrap nav-tabs to view all pages at once
         $(slidesContainer).find(".tab-pane").addClass("show active");
 
+        // Mess with collapsed elements to make them visible
+        $(slidesContainer).find(".collapse").addClass("show");
+
         // Fix embedded Youtube videos being too large
         $(slidesContainer).find(".embed-responsive").removeClass("embed-responsive");
 
