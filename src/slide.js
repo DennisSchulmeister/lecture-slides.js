@@ -82,7 +82,7 @@ class Slide {
     /**
      * This method renders the slide to a new HTML element which can be used
      * to display the slide. Due to the different types of slides (with or
-     * without fixed aspect ratios, presentation more on/off, ...) this method
+     * without fixed aspect ratios, presentation mode on/off, ...) this method
      * is a bit complicated. Callers however get a completely rendered slide
      * which they only need to throw on the screen.
      *
@@ -155,6 +155,7 @@ class Slide {
                 mainContainer.append(content);
             } else {
                 details.classList.add("col-md");
+                details.classList.add("ls-text-columns");
                 mainContainer.append(details);
             }
         } else if (presentationMode == "text-only") {
@@ -162,6 +163,7 @@ class Slide {
             // Then it's only the slide.
             if (details.innerHTML != "") {
                 details.classList.add("col-md");
+                details.classList.add("ls-text-columns");
                 mainContainer.append(details);
             } else {
                 content.classList.add("col-md");
@@ -177,6 +179,7 @@ class Slide {
         } else if (details.innerHTML != "") {
             // Only details, no slide
             details.classList.add("col-md");
+            details.classList.add("ls-text-columns");
             mainContainer.append(details);
         } else if (content.innerHTML != "") {
             // Only slide, no details

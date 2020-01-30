@@ -67,4 +67,20 @@ body {
             background: none;
         }
     }
+
+    // Mutliple columns in text-only mode
+    .ls-text-columns {
+        column-count: 1;
+        column-gap: 2em;
+
+        // bootstrap medium
+        @media (min-width: 768px) {
+            column-count: 2;
+        }
+
+        // bootstrap medium
+        @media (min-width: 992px) {
+            column-count: 3;
+        }
+    }
 }
