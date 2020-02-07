@@ -531,6 +531,9 @@ class SlideshowPlayer {
         } else if (title != "") {
             document.title = title;
         }
+
+        // Reset scroll position
+        window.scrollTo(0,0);
     }
 
     /**
