@@ -68,7 +68,7 @@ Copyright
 ---------
 
 lecture-slides.js (https://www.github.com/DennisSchulmeister/lecture-slides.js) <br/>
-© 2017 – 2019 Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
+© 2017 – 2020 Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
