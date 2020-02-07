@@ -648,6 +648,7 @@ class SlideshowPlayer {
      */
     _handleKeyUpEvent(event) {
         if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) return;
+        if (event.target.nodeName == "INPUT" || event.target.nodeNode == "BUTTON") return;
 
         switch (event.code) {
             case "ArrowLeft":
