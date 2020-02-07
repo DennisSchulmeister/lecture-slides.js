@@ -41,7 +41,7 @@ class NavigationButtons {
 
         this._ui.all = $($.parseHTML(`
             <!-- View -->
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown ls-menu-view">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     ${this._player.config.labelViewMenu}
                 </a>
@@ -153,17 +153,17 @@ class NavigationButtons {
             </li>
 
             <!-- Slide number / Slide amount -->
-            <li id="ls-nav-numbers" class="nav-item navbar-text ml-md-4"></li>
+            <li id="ls-nav-numbers" class="nav-item navbar-text ml-4"></li>
 
             <!-- Previous -->
-            <li class="nav-item ml-md-4">
+            <li class="nav-item ml-4">
                 <a id="ls-nav-prev" class="nav-link">
                     <kbd><span class="ls-sans-serif">🡄</span> ${this._player.config.labelPrev}</kbd>
                 </a>
             </li>
 
             <!-- Go To -->
-            <li class="nav-item">
+            <li class="nav-item ml-1 mr-1">
                 <form id="ls-nav-goto-form" class="form-inline">
                     <input id="ls-nav-goto-id" class="form-control" type="text" placeholder="${this._player.config.labelGoTo}" aria-label="${this._player.config.labelGoTo}">
                 </form>

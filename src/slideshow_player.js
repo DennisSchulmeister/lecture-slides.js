@@ -382,17 +382,17 @@ class SlideshowPlayer {
      */
     _buildUiFrame() {
         // Append navbar to container
-        let navbarClass = "fixed-top";
-        let mainStyle = "margin-top: 4rem";
+        let navbarClass = "ls-responsive-fixed";
+        let mainStyle = "margin-top: 3rem";
 
         if (this.config.embedded) {
-            navbarClass = "sticky-top";
+            navbarClass = "ls-responsive-sticky";
             mainStyle = "";
         }
 
         this.ui.navbar = $($.parseHTML(`
-            <div id="ls-main-top" class="${navbarClass}">
-                <nav id="ls-navbar" class="navbar navbar-expand-md navbar-light">
+            <div id="ls-main-top">
+                <nav id="ls-navbar" class="navbar navbar-expand-md navbar-light ${navbarClass}">
                     <span id="ls-title" class="navbar-brand navbar-text">
                         <!-- Slide title -->
                     </span>

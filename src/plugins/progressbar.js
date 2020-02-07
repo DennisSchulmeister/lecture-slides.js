@@ -37,13 +37,20 @@ class ProgressBar {
         this._player.slideNumber.bindFunction(() => this._updateProgressBar());
         this._player.presentation.amountVisible.bindFunction(() => this._updateProgressBar());
 
+        let progressClass = "fixed-top";
+
+        if (this._player.config.embedded) {
+            progressClass = "sticky-top";
+        }
+
         this._ui.progressbar = $($.parseHTML(`
-            <div class="ls-progress">
+            <div class="ls-progress ${progressClass}">
                 <div class="ls-bar" role="progressbar" style="width: 33%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
         `));
 
         $(this._player.ui.navbar).find("#ls-navbar").before(this._ui.progressbar);
+        $(this._player.ui.navbar).find("#ls-navbar").css("margin-top", "2px");  // See @progressBarHeight in style.less
     }
 
     /**

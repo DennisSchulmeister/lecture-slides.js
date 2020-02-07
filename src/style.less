@@ -8,11 +8,6 @@
  * License, or (at your option) any later version.
  */
 
-/*
-html, body {
-    min-height: 100%;
-}
-*/
 html{
     height: 100%;
 }
@@ -57,6 +52,20 @@ body {
             width: 6em;
         }
 
+        // Optimizations for mobile mode
+        .navbar-toggler {
+            font-size: 1em;
+        }
+
+        .navbar-nav {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .ls-menu-view {
+            flex-grow: 1;
+        }
+
         // Bold font instead of blue background for active nav items
         .active {
             background: none;
@@ -70,6 +79,33 @@ body {
         // Sans-serif font for compatibility of icon glyphs with Windows
         .ls-sans-serif {
             font-family: sans-serif;
+        }
+
+        // Reduce navbar height
+        padding: 0 1em 0 1em;
+
+        // Fit input field height to nav buttons
+        #ls-nav-goto-id {
+            height: 1.75rem;
+            margin-top: 0.5rem;
+        }
+    }
+
+    .ls-responsive-fixed {
+        // bootstrap medium
+        @media (min-width: 768px) {
+            position: fixed;
+            width: 100%;
+            z-index: 9999;
+        }
+    }
+
+    .ls-responsive-sticky {
+        // bootstrap medium
+        @media (min-width: 768px) {
+            position: sticky;
+            width: 100%;
+            z-index: 9999;
         }
     }
 
