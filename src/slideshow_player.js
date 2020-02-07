@@ -383,11 +383,11 @@ class SlideshowPlayer {
     _buildUiFrame() {
         // Append navbar to container
         let navbarClass = "ls-responsive-fixed";
-        let mainStyle = "margin-top: 3rem";
+        let mainClass = "responsive-margin-top";
 
         if (this.config.embedded) {
             navbarClass = "ls-responsive-sticky";
-            mainStyle = "";
+            mainClass = "";
         }
 
         this.ui.navbar = $($.parseHTML(`
@@ -427,9 +427,8 @@ class SlideshowPlayer {
 
                     display: flex;
                     flex-direction: column;
-                    align-content: stretch;
-
-                    ${mainStyle}";
+                    align-content: stretch;"
+                class="${mainClass}";
             ></div>
         `));
 
