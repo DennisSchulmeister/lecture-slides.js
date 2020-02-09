@@ -41,7 +41,7 @@
         "http-server": "^0.11.1",
         "less": "^3.9.0",
         "less-loader": "^4.0.5",
-        "node-sass": "^4.12.0",
+        "node-sass": "^4.13.1",
         "prosecco": "^0.1.2",
         "sass-loader": "^7.1.0",
         "shelljs": "^0.8.3",
