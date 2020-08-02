@@ -10,15 +10,23 @@
 
 @import (css) url('https://fonts.googleapis.com/css?family=Nunito:700|Raleway:400,400i,700');
 
+@slide-title-color: rgb(157, 26, 26);
+@heading-color: rgb(62, 62, 62);
 @nav-bg: rgb(237, 237, 237);
 @progressbar-color: rgb(18, 183, 212);
 @border-color: lightgrey;
 @print-border-color: rgb(170,170,170);
 
+@box-header-background-color: white;
+@box-label-border-color-active: rgb(44, 121, 145);
+@box-label-border-color-hover: lighten(@box-label-border-color-active, 25%);
+@box-content-background-color: rgb(241, 244, 246);
+
 :local(.style) {
     html, body {
         background-color: red;
     }
+
     // Mixin for hyphenated and justified text content
     .justified-text-mixin {
         text-align: justify;
@@ -32,9 +40,10 @@
     // Font settings
     font-family: 'Raleway', sans-serif;
 
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2, h3, h4, h5, h6, dt {
         font-family: 'Nunito', sans-serif;
         font-weight: bold;
+        color: @heading-color;
     }
 
     // Progress bar
@@ -128,9 +137,9 @@
     }
 
     // Slides
-    .ls-slide-title {
-        //color: darken(@progressbar-color, 20%);
-        color: rgb(157, 26, 26);
+    .ls-slide-title,
+    .ls-slide-title h1 {
+        color: @slide-title-color;
         text-shadow: 1px 1px 1px #606060;
     }
 
@@ -198,5 +207,71 @@
                 border-top: 1px solid @print-border-color;
             }
         }
+    }
+
+    // More modern and responsive bootstrap tab pages and carousel
+    .nav-tabs {
+        background-color: @box-header-background-color;
+        border: 0;
+
+        .nav-link {
+            border: 0;
+        }
+
+        .nav-link {
+            background-color: transparent;
+            border-bottom: 2px solid transparent;
+
+            &.active {
+                border-bottom-color: @box-label-border-color-active;
+            }
+
+            &:hover {
+                border-bottom-color: @box-label-border-color-hover;
+            }
+        }
+
+    }
+
+    .tab-content,
+    .carousel {
+        padding: 1em;
+
+        background-color: @box-content-background-color;
+
+        border: 0px solid @border-color;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+    }
+
+    .carousel {
+        // Fix carousel overlapping nav tab border
+        z-index: -1;
+    }
+
+    // Info boxes
+    .info-box-title {
+        font-weight: bold;
+    }
+
+    .info-box {
+        padding: 0.5em;
+        margin-bottom: 0.75em;
+
+        background-color: @box-content-background-color;
+        border-left: 4px solid rgb(46, 114, 163);
+
+        &.warning {
+            border-left-color: rgb(246, 161, 34);
+        }
+
+        &.critical {
+            border-left-color: rgb(207, 30, 30);
+        }
+    }
+
+    .tab-content .info-box,
+    .carousel .info-box {
+        background-color: darken(@box-content-background-color, 6%);
     }
 }
