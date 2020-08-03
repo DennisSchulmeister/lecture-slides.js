@@ -179,9 +179,6 @@
             border-top: 1px solid @print-border-color;
         }
 
-        // .ls-slide-content {
-        //     font-size: 90%;
-        // }
         // Reduce font-sizes as they look huge on paper
         font-size: 85%;
 
@@ -210,16 +207,18 @@
     }
 
     // More modern and responsive bootstrap tab pages and carousel
+    .tab-pages,
+    .carousel {
+        margin-bottom: 1em;
+    }
+
     .nav-tabs {
         background-color: @box-header-background-color;
         border: 0;
 
         .nav-link {
-            border: 0;
-        }
-
-        .nav-link {
             background-color: transparent;
+            border: 0;
             border-bottom: 2px solid transparent;
 
             &.active {
@@ -230,7 +229,6 @@
                 border-bottom-color: @box-label-border-color-hover;
             }
         }
-
     }
 
     .tab-content,
@@ -247,6 +245,23 @@
     .carousel {
         // Fix carousel overlapping nav tab border
         z-index: -1;
+    }
+
+    .carousel-outer {
+        // Remove padding for carousel-nav links, since there are no active nav links
+        // with a permanent line below 
+        .nav-link {
+            padding-left: 0;
+            padding-right: 0;
+            margin-right: 1em;
+        }
+
+        .sub-nav-tabs {
+            .nav-link {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+        }
     }
 
     // Info boxes
