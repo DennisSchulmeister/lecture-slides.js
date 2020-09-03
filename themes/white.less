@@ -240,16 +240,16 @@
         border: 0px solid @border-color;
         border-top-width: 1px;
         border-bottom-width: 1px;
-    }
 
-    .carousel {
-        // Fix carousel overlapping nav tab border
-        z-index: -1;
+        .tab-content,
+        .carousel {
+            background-color: lighten(@box-content-background-color, 5%);
+        }
     }
 
     .carousel-outer {
         // Remove padding for carousel-nav links, since there are no active nav links
-        // with a permanent line below 
+        // with a permanent line below
         .nav-link {
             padding-left: 0;
             padding-right: 0;
@@ -288,5 +288,23 @@
     .tab-content .info-box,
     .carousel .info-box {
         background-color: darken(@box-content-background-color, 6%);
+    }
+
+    // Cursor for collapsible blocks
+    [data-toggle="collapse"] {
+        cursor: pointer;
+        text-decoration: none !important;
+    }
+
+    // Keyboard shortcuts
+    kbd {
+        border: 1px solid rgb(170, 170, 170);
+        background-color: rgb(240, 240, 240);
+        color: rgb(80, 80, 80);
+    }
+
+    // Default margins
+    .embed-responsive {
+        margin-bottom: 1em;
     }
 }
