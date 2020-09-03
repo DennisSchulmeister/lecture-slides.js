@@ -93,7 +93,7 @@ class SlideshowMode {
 
         let rendered = slide.renderSlide(this._player.presentationMode.value);
 
-        $(this._ui).find("*").detach()
+        this._ui.innerHTML = "";
         $(this._ui).append(rendered);
 
         this._player.page.value = {

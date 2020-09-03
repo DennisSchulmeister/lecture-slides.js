@@ -86,10 +86,15 @@ class Slide {
      * is a bit complicated. Callers however get a completely rendered slide
      * which they only need to throw on the screen.
      *
+     * NOTE: As each element can only have one parent, make sure that only
+     * the main slide display uses the original elements. All other displays
+     * (e.g. the preview in the table of contents) must use cloned copies.
+     *
      * @param  {Boolean} presentationMode Hide detail explanations at the side
+     * @param {Boolean} clone Whether to clone or return the original element
      * @return {Element} A new HTML element with the rendered slide
      */
-    renderSlide(presentationMode) {
+    renderSlide(presentationMode, clone) {
         // Define basic layout structure
         let rendered = $($.parseHTML(`
             <!-- Main container -->
@@ -142,8 +147,8 @@ class Slide {
         );
 
         // Add content
-        let details = this.createDetailsElement();
-        let content = this.createContentElement();
+        let details = this.createDetailsElement(clone);
+        let content = this.createContentElement(clone);
 
         let mainContainer = rendered.find(".ls-slide-main");
 
@@ -195,10 +200,18 @@ class Slide {
      * Create a new, unstyled DOM element with the slide content. This can
      * be used to apply further CSS styles and display the slide.
      *
+     * NOTE: As each element can only have one parent, make sure that only
+     * the main slide display uses the original element. All other displays
+     * (e.g. the preview in the table of contents) must use a cloned copy.
+     *
+     * @param {Boolean} clone Whether to clone or return the original element
      * @return {Element} DOM element with the slide content
      */
-    createContentElement() {
-        let element = this.content.cloneNode(true);
+    createContentElement(clone) {
+        let element = this.content;
+        if (clone) element = element.cloneNode(true);
+        else element.remove();
+
         element.classList.add("ls-slide-content");
         return element;
     }
@@ -208,10 +221,18 @@ class Slide {
      * be used to apply further CSS styles and display the additional
      * explanations for a slide.
      *
+     * NOTE: As each element can only have one parent, make sure that only
+     * the main slide display uses the original element. All other displays
+     * (e.g. the preview in the table of contents) must use a cloned copy.
+     *
+     * @param {Boolean} clone Whether to clone or return the original element
      * @return {Element} DOM element with the detail content
      */
-    createDetailsElement() {
-        let element = this.details.cloneNode(true);
+    createDetailsElement(clone) {
+        let element = this.details;
+        if (clone) element = element.cloneNode(true);
+        else element.remove();
+
         element.classList.add("ls-slide-details");
         return element;
     }

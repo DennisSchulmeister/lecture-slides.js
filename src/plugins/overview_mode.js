@@ -123,7 +123,7 @@ class OverviewMode {
         let slide = this._player.presentation.getSlide(slideNumber);
         if (!slide) return;
 
-        let rendered = slide.renderSlide("both");
+        let rendered = slide.renderSlide("both", true);
         rendered.classList.add("ls-overview-slide-preview");
         rendered.style.transform = "scale(0.75)";
         rendered.style.transformOrigin = "0% 0%";
