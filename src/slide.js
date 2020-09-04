@@ -150,6 +150,16 @@ class Slide {
         let details = this.createDetailsElement(clone);
         let content = this.createContentElement(clone);
 
+        details.classList.remove("col-md");
+        details.classList.remove("col-md-4");
+        details.classList.remove("col-md-8");
+        details.classList.remove("ls-text-columns");
+
+        content.classList.remove("col-md");
+        content.classList.remove("col-md-4");
+        content.classList.remove("col-md-8");
+        content.classList.remove("ls-text-columns");
+
         let mainContainer = rendered.find(".ls-slide-main");
 
         if (presentationMode == "slides-only") {
