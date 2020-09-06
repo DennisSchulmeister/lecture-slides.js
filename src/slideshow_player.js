@@ -190,6 +190,12 @@ class SlideshowPlayer {
         this.presentationMode = new ObservableValue("both");
         this.fadeOutColor = new ObservableValue("");
 
+        this.ready.bindFunction(ready => {
+            let eventName = "ls-slideshow-ready";
+            if (!ready) eventName = "ls-slideshow-not-ready";
+            window.dispatchEvent(new Event(eventName));
+        });
+
         this.uiMode.addValidator(newValue => {
             if (!this._uiModes[newValue]) {
                 console.log("Unknown UI mode:", newValue);
@@ -228,6 +234,29 @@ class SlideshowPlayer {
 
         this._lockHistory = false;
         this.slideNumber.bindFunction((newValue, oldValue) => this._pushNavigationHistory(newValue, oldValue));
+
+        this.slideNumber.addValidator(newValue => {
+            let allowChange = true;
+            let callback = value => allowChange = value;
+
+            window.dispatchEvent(new CustomEvent("ls-slide-changing", {
+                detail: {
+                    nextSlide: newValue,
+                    allowChange: callback,
+                }
+            }));
+
+            return allowChange;
+        });
+
+        this.slideNumber.bindFunction((newValue, oldValue) => {
+            window.dispatchEvent(new CustomEvent("ls-slide-changed", {
+                detail: {
+                    previousSlide: oldValue,
+                    currentSlide: newValue
+                }
+            }));
+        });
 
         // DOM elements for the user interface
         this.ui = {};
