@@ -63,6 +63,16 @@ class SlideshowMode {
     _enable() {
         this._enabled = true;
         this._renderSlide(true);
+
+        // Raise ls-slide-changed event to trigger custom scripts which update the
+        // slide content, in case the slide has been visible on the table of contents
+        // and the user directly switched to the presentation from there.
+        window.dispatchEvent(new CustomEvent("ls-slide-changed", {
+            detail: {
+                previousSlide: this._player.slideNumber.value,
+                currentSlide: this._player.slideNumber.value
+            }
+        }));
     }
 
     /**
