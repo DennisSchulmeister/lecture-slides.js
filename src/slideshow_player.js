@@ -310,6 +310,16 @@ class SlideshowPlayer {
                 plugin.preprocessHtml(presentationHtml, utils);
             }
 
+            window.addEventListener("ls-callback-html-changed", event => {
+                if (!event.detail) return;
+
+                for (let pluginName in this._plugins) {
+                    let plugin = this._plugins[pluginName];
+                    if (!plugin.preprocessHtml) continue;
+                    plugin.preprocessHtml(event.detail, utils);
+                }
+            });
+
             this.presentation = Presentation.createFromHtml(this, presentationHtml);
             this._buildUiFrame();
 
