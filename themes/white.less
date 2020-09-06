@@ -22,6 +22,16 @@
 @box-label-border-color-hover: lighten(@box-label-border-color-active, 25%);
 @box-content-background-color: rgb(241, 244, 246);
 
+// Reduced font size on smartphones
+html {
+    font-size: 11pt;
+
+    // bootstrap medium
+    @media (min-width: 767px) {
+        font-size: 12pt;
+    }
+}
+
 :local(.style) {
     html, body {
         background-color: red;
@@ -227,6 +237,13 @@
 
             &:hover {
                 border-bottom-color: @box-label-border-color-hover;
+            }
+        }
+
+        // bootstrap medium
+        @media (max-width: 766px) {
+            .nav-item {
+                width: 100%;
             }
         }
     }

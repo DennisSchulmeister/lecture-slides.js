@@ -16,6 +16,7 @@ import 'bootstrap/dist/css/bootstrap-grid.min.css';
 
 // Own assets
 import "./style.less";
+import "./icomoon/style.css";
 
 // Library export of SlideshowPlayer
 import SlideshowPlayer from "./slideshow_player.js";

@@ -158,7 +158,7 @@ class NavigationButtons {
             <!-- Previous -->
             <li class="nav-item ml-4">
                 <a id="ls-nav-prev" class="nav-link">
-                    <kbd><span class="ls-sans-serif">🡄</span> ${this._player.config.labelPrev}</kbd>
+                    <kbd><span class="icon-arrow-left"></span> ${this._player.config.labelPrev}</kbd>
                 </a>
             </li>
 
@@ -172,7 +172,7 @@ class NavigationButtons {
             <!-- Next -->
             <li class="nav-item">
                 <a id="ls-nav-next" class="nav-link">
-                    <kbd>${this._player.config.labelNext} <span class="ls-sans-serif">🡆</span></kbd>
+                    <kbd>${this._player.config.labelNext} <span class="icon-arrow-right"></span></kbd>
                 </a>
             </li>
         `));
