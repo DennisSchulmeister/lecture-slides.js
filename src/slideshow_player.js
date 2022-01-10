@@ -35,7 +35,7 @@ import utils from "./core/utils.js";
  *   NAME          DEFAULT    DESCRIPTION
  *   ============= ========== ==================================================
  *   plugins       {}         External plugins which add additional features
-*   ------------- ---------- --------------------------------------------------
+ *   ------------- ---------- --------------------------------------------------
  *   embedded      false      Don't set window title and browser history
  *   ------------- ---------- --------------------------------------------------
  *   container     .slides    Query selector to find the parent element, which
@@ -483,7 +483,6 @@ class SlideshowPlayer {
                     z-index: -9999;
                     background: rgba(0,0,0,0);
                     color: rgba(0,0,0,0);
-
                     transition: background-color 0.75s, color 0.75s;"
             >
                 <!-- Show slides again -->
