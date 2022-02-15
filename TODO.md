@@ -6,17 +6,17 @@ Nice to Have Features
 
 Technical improvements:
 
- * Upgrade Webpack 3 to Webpack 4 (or switch to parceljs?)
- * Use `export` keyword for each exported object of a module instead of `export class { obj1, obj2 }``
+ * Upgrade Webpack or switch to esbuild
+ * Use `export` keyword for each exported object of a module instead of `export class { obj1, obj2 }`
  * Enable webpack's pruning feature to prune unused code
  * Fix broken javascript compression
+ * Remove jQuery dependency
 
 In no particular order:
 
  * Improvements to the responsive design on tablets and smartphones
  * Minor adjustments to the font sizes (headings smaller in side text, smaller header bar)
  * Possibility to reverse sizes (side text large, slide content small)
- * Additional "side-text only" view mode
  * Alternative slide style: TOC left, Slide + Text right
  * Remove indention of TOC entries (possibly styling chapter heading with smaller font size, small-caps and darkgrey color)
 
