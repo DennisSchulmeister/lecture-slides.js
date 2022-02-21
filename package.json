@@ -34,6 +34,7 @@
         "popper.js": "^1.15.0"
     },
     "devDependencies": {
+        "@dschulmeis/ls-utils": "^1.0.2",
         "css-loader": "^2.1.1",
         "extract-text-webpack-plugin": "^4.0.0-beta.0",
         "file-loader": "^3.0.1",
@@ -44,7 +45,7 @@
         "node-sass": "^4.14.1",
         "prosecco": "^0.1.2",
         "sass-loader": "^7.3.1",
-        "shelljs": "^0.8.4",
+        "shelljs": "^0.8.5",
         "style-loader": "^0.23.1",
         "terser": "^3.17.0",
         "terser-webpack-plugin": "^1.4.4",

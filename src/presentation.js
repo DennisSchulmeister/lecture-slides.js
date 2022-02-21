@@ -11,7 +11,7 @@
 
 import $ from "jquery";
 
-import ObservableValue from "./core/observable_value.js";
+import ObservableValue from "@dschulmeis/ls-utils/observable_value.js";
 import Slide from "./slide.js";
 
 /**

@@ -16,10 +16,9 @@ import plugins from "./plugins/";
 import styles from "./style.less";
 import themes from "../themes/";
 
-import ObservableValue from "./core/observable_value.js";
+import ObservableValue from "@dschulmeis/ls-utils/observable_value.js";
 import Presentation from "./presentation.js";
 import Slide from "./slide.js";
-import utils from "./core/utils.js";
 
 /**
  * This is the main entry class of Learning Slides. It must be instantiated
@@ -307,7 +306,7 @@ class SlideshowPlayer {
             for (let pluginName in this._plugins) {
                 let plugin = this._plugins[pluginName];
                 if (!plugin.preprocessHtml) continue;
-                plugin.preprocessHtml(presentationHtml, utils);
+                plugin.preprocessHtml(presentationHtml);
             }
 
             window.addEventListener("ls-callback-html-changed", event => {
@@ -316,7 +315,7 @@ class SlideshowPlayer {
                 for (let pluginName in this._plugins) {
                     let plugin = this._plugins[pluginName];
                     if (!plugin.preprocessHtml) continue;
-                    plugin.preprocessHtml(event.detail, utils);
+                    plugin.preprocessHtml(event.detail);
                 }
             });
 
@@ -792,6 +791,7 @@ class SlideshowPlayer {
      *   * Swipe left: Next slide
      *   * Swipe right: Previous slide
      *   * Double Tap: Toggle presentation mode
+     *   * Long Press: Toggle overview
      * @param  {[HammerEvent]} event hammer.js touch gesture event
      */
     _handleTouchGesture(event) {
