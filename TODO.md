@@ -6,10 +6,6 @@ Nice to Have Features
 
 Technical improvements:
 
- * Upgrade Webpack or switch to esbuild
- * Use `export` keyword for each exported object of a module instead of `export class { obj1, obj2 }`
- * Enable webpack's pruning feature to prune unused code
- * Fix broken javascript compression
  * Remove jQuery dependency
 
 In no particular order:
