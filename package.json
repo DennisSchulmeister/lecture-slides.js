@@ -17,7 +17,7 @@
         "e-learning"
     ],
     "scripts": {
-        "do-release": "npm release --access=public"
+        "do-publish": "npm publish --access=public"
     },
     "dependencies": {
         "@dschulmeis/ls-utils": "^1.0.2",
