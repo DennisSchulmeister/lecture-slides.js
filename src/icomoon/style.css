@@ -1,18 +1,17 @@
 @font-face {
-  font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?lc9g1n');
-  src:  url('fonts/icomoon.eot?lc9g1n#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?lc9g1n') format('truetype'),
-    url('fonts/icomoon.woff?lc9g1n') format('woff'),
-    url('fonts/icomoon.svg?lc9g1n#icomoon') format('svg');
+  font-family: 'lecture-slides-icons';
+  src:
+    url('fonts/lecture-slides-icons.ttf?ds4s9d') format('truetype'),
+    url('fonts/lecture-slides-icons.woff?ds4s9d') format('woff'),
+    url('fonts/lecture-slides-icons.svg?ds4s9d#lecture-slides-icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="__ls__icon-"], [class*=" __ls__icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
+  font-family: 'lecture-slides-icons' !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -25,111 +24,111 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-newspaper:before {
+.__ls__icon-newspaper:before {
   content: "\e904";
 }
-.icon-pencil2:before {
+.__ls__icon-pencil2:before {
   content: "\e906";
 }
-.icon-camera:before {
+.__ls__icon-camera:before {
   content: "\e90f";
 }
-.icon-headphones:before {
+.__ls__icon-headphones:before {
   content: "\e910";
 }
-.icon-music:before {
+.__ls__icon-music:before {
   content: "\e911";
 }
-.icon-film:before {
+.__ls__icon-film:before {
   content: "\e913";
 }
-.icon-pacman:before {
+.__ls__icon-pacman:before {
   content: "\e916";
 }
-.icon-mic:before {
+.__ls__icon-mic:before {
   content: "\e91e";
 }
-.icon-book:before {
+.__ls__icon-book:before {
   content: "\e91f";
 }
-.icon-library:before {
+.__ls__icon-library:before {
   content: "\e921";
 }
-.icon-file-empty:before {
+.__ls__icon-file-empty:before {
   content: "\e924";
 }
-.icon-file-text2:before {
+.__ls__icon-file-text2:before {
   content: "\e926";
 }
-.icon-file-picture:before {
+.__ls__icon-file-picture:before {
   content: "\e927";
 }
-.icon-file-music:before {
+.__ls__icon-file-music:before {
   content: "\e928";
 }
-.icon-file-play:before {
+.__ls__icon-file-play:before {
   content: "\e929";
 }
-.icon-file-video:before {
+.__ls__icon-file-video:before {
   content: "\e92a";
 }
-.icon-file-zip:before {
+.__ls__icon-file-zip:before {
   content: "\e92b";
 }
-.icon-envelop:before {
+.__ls__icon-envelop:before {
   content: "\e945";
 }
-.icon-calendar:before {
+.__ls__icon-calendar:before {
   content: "\e953";
 }
-.icon-bubbles2:before {
+.__ls__icon-bubbles2:before {
   content: "\e96d";
 }
-.icon-cog:before {
+.__ls__icon-cog:before {
   content: "\e994";
 }
-.icon-bin:before {
+.__ls__icon-bin:before {
   content: "\e9ac";
 }
-.icon-list-numbered:before {
+.__ls__icon-list-numbered:before {
   content: "\e9b9";
 }
-.icon-earth:before {
+.__ls__icon-earth:before {
   content: "\e9ca";
 }
-.icon-attachment:before {
+.__ls__icon-attachment:before {
   content: "\e9cd";
 }
-.icon-cancel-circle:before {
+.__ls__icon-cancel-circle:before {
   content: "\ea0d";
 }
-.icon-arrow-right:before {
+.__ls__icon-arrow-right:before {
   content: "\ea34";
 }
-.icon-arrow-left:before {
+.__ls__icon-arrow-left:before {
   content: "\ea38";
 }
-.icon-embed2:before {
+.__ls__icon-embed2:before {
   content: "\ea80";
 }
-.icon-terminal:before {
+.__ls__icon-terminal:before {
   content: "\ea81";
 }
-.icon-github:before {
+.__ls__icon-github:before {
   content: "\eab0";
 }
-.icon-file-pdf:before {
+.__ls__icon-file-pdf:before {
   content: "\eadf";
 }
-.icon-file-openoffice:before {
+.__ls__icon-file-openoffice:before {
   content: "\eae0";
 }
-.icon-file-word:before {
+.__ls__icon-file-word:before {
   content: "\eae1";
 }
-.icon-file-excel:before {
+.__ls__icon-file-excel:before {
   content: "\eae2";
 }
-.icon-libreoffice:before {
+.__ls__icon-libreoffice:before {
   content: "\eae3";
 }
