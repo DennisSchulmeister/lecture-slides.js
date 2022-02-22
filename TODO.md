@@ -6,6 +6,11 @@ Nice to Have Features
 
 Technical improvements:
 
+ * Move to latest Bootstrap version (data-xxx becomes data-bs-xxx)
+ * Test if the recent changes for planned version 2.0.0 break existing slides
+ * Port from mini-tutorial.js: Split HTML documents, plugin array instead of object
+ * Release new version 2.0.0
+ * Update presentation templates, move from webpack to esbuild
  * Remove jQuery dependency
 
 In no particular order:
