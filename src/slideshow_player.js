@@ -570,6 +570,12 @@ class SlideshowPlayer {
 
         // Reset scroll position
         window.scrollTo(0,0);
+
+        // Emit event for plugins
+        window.dispatchEvent(new CustomEvent("ls-callback-section-changed", {
+            // TO CHECK: This must be the <section> element!
+            detail: page.element,
+        }));
     }
 
     /**
