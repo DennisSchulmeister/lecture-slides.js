@@ -1,5 +1,5 @@
 /*
- * lecture-slides.js (https://www.buzzlms.de)
+ * lecture-slides.js (https://www.wpvs.de)
  * © 2018  Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -138,14 +138,14 @@ class PrintMode {
             slideContainer.find(".ls-slide-title").append(titleElement);
 
             // Slide content
-            let contentElement = slide.createContentElement();
+            let contentElement = slide.createContentElement(true);
             slideContainer.find(".ls-slide-content").append(contentElement);
 
             // Side text
             if (this._player.presentationMode.value) {
                 slideContainer.find(".ls-slide-details").remove();
             } else {
-                let detailsElement = slide.createDetailsElement();
+                let detailsElement = slide.createDetailsElement(true);
                 slideContainer.find(".ls-slide-details").replaceWith(detailsElement);
             }
 
