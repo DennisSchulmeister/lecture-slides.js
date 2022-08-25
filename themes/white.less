@@ -12,7 +12,7 @@
 
 @slide-title-color: rgb(157, 26, 26);
 @heading-color: rgb(62, 62, 62);
-@nav-bg: rgb(237, 237, 237);
+@nav-bg: rgb(245, 245, 245);
 @progressbar-color: rgb(18, 183, 212);
 @border-color: lightgrey;
 @print-border-color: rgb(170,170,170);
@@ -323,5 +323,15 @@ html {
     // Default margins
     .embed-responsive {
         margin-bottom: 1em;
+    }
+
+    // No underline for links
+    a {
+        text-decoration: none !important;
+    }
+
+    // Remove bootstrap's blue focus ring
+    :focus {
+        box-shadow: none !important;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * lecture-slides.js (https://www.buzzlms.de)
+ * lecture-slides.js (https://www.wpvs.de)
  * © 2017  Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,10 +42,16 @@ class NavigationButtons {
         this._ui.all = $($.parseHTML(`
             <!-- View -->
             <li class="nav-item dropdown ls-menu-view">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <a
+                    class          = "nav-link dropdown-toggle"
+                    role           = "button"
+                    data-bs-toggle = "dropdown"
+                    aria-haspopup  = "true"
+                    aria-expanded  = "false"
+                >
                     ${this._player.config.labelViewMenu}
                 </a>
-                <div class="dropdown-menu">
+                <div class="dropdown-menu mb-3 dropdown-menu-end">
                     <!-- Overview -->
                     <a id="ls-nav-overview-mode" class="dropdown-item">
                         <table>
@@ -152,27 +158,20 @@ class NavigationButtons {
                 </div>
             </li>
 
-            <!-- Slide number / Slide amount -->
-            <li id="ls-nav-numbers" class="nav-item navbar-text ml-4"></li>
-
             <!-- Previous -->
-            <li class="nav-item ml-4">
+            <li class="nav-item ms-4">
                 <a id="ls-nav-prev" class="nav-link">
-                    <kbd><span class="__ls__icon-arrow-left"></span> ${this._player.config.labelPrev}</kbd>
+                    <span class="__ls__icon-arrow-left" title="${this._player.config.labelPrev}"></span>
                 </a>
             </li>
 
-            <!-- Go To -->
-            <li class="nav-item ml-1 mr-1">
-                <form id="ls-nav-goto-form" class="form-inline">
-                    <input id="ls-nav-goto-id" class="form-control" type="text" placeholder="${this._player.config.labelGoTo}" aria-label="${this._player.config.labelGoTo}">
-                </form>
-            </li>
+            <!-- Slide number / Slide amount -->
+            <li id="ls-nav-numbers" class="nav-item navbar-text ms-1 me-1"></li>
 
             <!-- Next -->
             <li class="nav-item">
                 <a id="ls-nav-next" class="nav-link">
-                    <kbd>${this._player.config.labelNext} <span class="__ls__icon-arrow-right"></span></kbd>
+                    <span class="__ls__icon-arrow-right" title="${this._player.config.labelNext}"></span>
                 </a>
             </li>
         `));
@@ -186,7 +185,6 @@ class NavigationButtons {
         this._ui.fadeToWhite = this._ui.all.find("#ls-nav-fade-to-white")[0];
         this._ui.fadeToBlack = this._ui.all.find("#ls-nav-fade-to-black")[0];
         this._ui.prev = $(this._ui.all.find("#ls-nav-prev")[0]);
-        this._ui.gotoForm = $(this._ui.all.find("#ls-nav-goto-form")[0])
         this._ui.gotoId = $(this._ui.all.find("#ls-nav-goto-id")[0])
         this._ui.next = $(this._ui.all.find("#ls-nav-next")[0]);
 
@@ -265,17 +263,6 @@ class NavigationButtons {
         this._ui.next.on("click", () => {
             if (this._player.slideNumber.value >= this._player.presentation.amountVisible.value) return;
             this._player.slideNumber.value++;
-        });
-
-        /**
-         * Go to slide with given number or id.
-         */
-        this._ui.gotoForm.on("submit", () => {
-            let slideIdRaw = this._ui.gotoId.val();
-            let slideId = parseInt(slideIdRaw);
-            if (!slideId) slideId = slideIdRaw;
-
-            this._player.gotoSlide(slideId);
         });
 
         this._player.ui.navbar.find("#ls-nav-ul").append(this._ui.all);

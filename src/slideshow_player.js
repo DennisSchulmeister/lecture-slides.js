@@ -1,5 +1,5 @@
 /*
- * lecture-slides.js (https://www.buzzlms.de)
+ * lecture-slides.js (https://www.wpvs.de)
  * © 2017  Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,8 +58,6 @@ import Slide from "./slide.js";
  *   labelNext     Next       Label for the "go to next slide" button
  *   ------------- ---------- --------------------------------------------------
  *   labelPrev     Previous   Label for the "go to previous slide" button
- *   ------------- ---------- --------------------------------------------------
- *   labelGoTo     Go to      Label for the "go to slide number" field
  *   ------------- ---------- --------------------------------------------------
  *   labelView-    View       Label for the "view" menu where the user switched
  *   Menu                     between available view modes
@@ -160,7 +158,6 @@ class SlideshowPlayer {
 
         if (!this.config.labelNext) this.config.labelNext = "Next";
         if (!this.config.labelPrev) this.config.labelPrev = "Previous";
-        if (!this.config.labelGoTo) this.config.labelGoTo = "Go to";
         if (!this.config.labelViewMenu) this.config.labelViewMenu = "View";
         if (!this.config.labelOverview) this.config.labelOverview = "Overview";
         if (!this.config.labelSlidesAndText) this.config.labelSlidesAndText = "Slides and Text";
@@ -430,25 +427,25 @@ class SlideshowPlayer {
 
         this.ui.navbar = $($.parseHTML(`
             <div id="ls-main-top">
-                <nav id="ls-navbar" class="navbar navbar-expand-md navbar-light ${navbarClass}">
+                <nav id="ls-navbar" class="navbar navbar-expand-md ${navbarClass}">
                     <span id="ls-title" class="navbar-brand navbar-text">
                         <!-- Slide title -->
                     </span>
 
                     <button
-                        class="navbar-toggler"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#ls-navbar-toggled"
-                        aria-controls="ls-navbar-toggled"
-                        aria-expanded="false"
-                        aria-label="${this.config.labelNavigation}"
+                        class          = "navbar-toggler"
+                        type           = "button"
+                        data-bs-toggle = "collapse"
+                        data-bs-target = "#ls-navbar-toggled"
+                        aria-controls  = "ls-navbar-toggled"
+                        aria-expanded  = "false"
+                        aria-label     = "${this.config.labelNavigation}"
                     >
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
                     <div id="ls-navbar-toggled" class="collapse navbar-collapse">
-                        <ul id="ls-nav-ul" class="navbar-nav ml-auto">
+                        <ul id="ls-nav-ul" class="navbar-nav ms-auto">
                             <!-- Nav items -->
                         </ul>
                     </div>

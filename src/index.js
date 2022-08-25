@@ -1,5 +1,5 @@
 /*
- * lecture-slides.js (https://www.buzzlms.de)
+ * lecture-slides.js (https://www.wpvs.de)
  * © 2017 – 2019 Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
  *
  * This program is free software: you can redistribute it and/or modify
