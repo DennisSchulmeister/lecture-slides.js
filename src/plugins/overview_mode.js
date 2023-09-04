@@ -9,6 +9,8 @@
  */
 "use strict";
 
+import $ from "jquery";
+
 /**
  * Plugin for the slides player object which allows to show a slide overview.
  */

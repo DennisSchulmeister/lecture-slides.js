@@ -9,6 +9,8 @@
  */
 "use strict";
 
+import $ from "jquery";
+
 /**
  * This class represents a single slide.
  */

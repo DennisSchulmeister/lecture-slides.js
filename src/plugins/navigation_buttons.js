@@ -9,6 +9,8 @@
  */
 "use strict";
 
+import $ from "jquery";
+
 /**
  * Plugin for the slides player object which renders the navigation buttons
  * at the top right of the navbar.

@@ -9,6 +9,8 @@
  */
 "use strict";
 
+import $ from "jquery";
+
 /**
  * Plugin for the slides player object which shows all slides on one big
  * page for printing.
