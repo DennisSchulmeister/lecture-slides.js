@@ -1,6 +1,6 @@
 {
     "name": "@dschulmeis/lecture-slides.js",
-    "version": "3.0.1",
+    "version": "4.0.0",
     "description": "A simple JavaScript library for the browser to create slides for online learning. In contrast to other (more powerful) HTML presentation framework each slide may have additional explanations and side notes.",
     "main": "src/index.js",
     "author": "Dennis Schulmeister-Zimolong",
@@ -21,9 +21,8 @@
     },
     "dependencies": {
         "@dschulmeis/ls-utils": "^1.2.0",
-        "bootstrap": "^5.2.0",
+        "bootstrap": "^5.3.1",
         "hammerjs": "^2.0.8",
-        "jquery": "^3.5.1",
-        "popper.js": "^1.15.0"
+        "jquery": "git+https://github.com/jquery/jquery.git"
     }
 }

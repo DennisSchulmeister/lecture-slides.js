@@ -9,7 +9,7 @@
  */
 "use strict";
 
-import $ from "jquery";
+import $ from "jquery/src/jquery.js";
 
 /**
  * Plugin for the slides player object which renders the navigation buttons

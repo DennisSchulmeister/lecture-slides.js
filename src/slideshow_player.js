@@ -9,16 +9,16 @@
  */
 "use strict";
 
-import $ from "jquery";
+import $ from "jquery/src/jquery.js";
 import Hammer from "hammerjs";
 
 import plugins from "./plugins/";
-import styles from "./style.less";
-import themes from "../themes/";
+import "./style.less";
+import "../themes/white.less";
 
 import ObservableValue from "@dschulmeis/ls-utils/observable_value.js";
 import Presentation from "./presentation.js";
-import Slide from "./slide.js";
+// import Slide from "./slide.js";
 
 /**
  * This is the main entry class of Learning Slides. It must be instantiated
@@ -28,7 +28,7 @@ import Slide from "./slide.js";
  * <script src="%public_url%/learning-slides.app.bundle.js"></script>
  * <script>new SlideshowPlayer().start();</script>
  *
- * The constructor may be given the followong additional configuration values:
+ * The constructor may be given the following additional configuration values:
  *
  *   ============= ========== ==================================================
  *   NAME          DEFAULT    DESCRIPTION
@@ -36,11 +36,6 @@ import Slide from "./slide.js";
  *   plugins       {}         External plugins which add additional features
  *   ------------- ---------- --------------------------------------------------
  *   embedded      false      Don't set window title and browser history
- *   ------------- ---------- --------------------------------------------------
- *   container     .slides    Query selector to find the parent element, which
- *                            contains the slides
- *   ------------- ---------- --------------------------------------------------
- *   theme         white      Name of the style theme
  *   ------------- ---------- --------------------------------------------------
  *   mode          overview   UI mode at the start of the presentation.
  *                            `overview`: Show an overview of all slides
@@ -109,8 +104,6 @@ import Slide from "./slide.js";
  *
  *   * User Interface:
  *
- *       * {String} theme: The name of the currently set UI theme.
- *
  *       * {String} uiMode: The name of the currently active UI mode. The name
  *         itself has no meaning to the player. But it is used by the plugins
  *         to detect when they are responsible for the UI.
@@ -149,8 +142,6 @@ class SlideshowPlayer {
 
         if (!this.config.plugins) this.config.plugins = {};
         if (!this.config.embedded) this.config.embedded = false;
-        if (!this.config.container) this.config.container = ".slides";
-        if (!this.config.theme) this.config.theme = "white";
         if (!this.config.mode) this.config.mode = "overview";
         if (!this.config.Linkmode) this.config.Linkmode = "slideshow";
         if (!this.config.slideNumber) this.config.slideNumber = 1;
@@ -176,7 +167,6 @@ class SlideshowPlayer {
         // Create observable values
         this.init = new ObservableValue(false);
         this.ready = new ObservableValue(false);
-        this.theme = new ObservableValue("");
         this.uiMode = new ObservableValue("");
         this.windowTitle = new ObservableValue("");
         this.navbarTitle = new ObservableValue("");
@@ -201,15 +191,6 @@ class SlideshowPlayer {
             return true;
         });
 
-        this.theme.addValidator(newValue => {
-            if (!themes[newValue]) {
-                console.log("Unknown theme:", newValue);
-                return false;
-            }
-
-            return true;
-        });
-
         this.slideNumber.addValidator(newValue => {
             if (newValue > this.presentation.amountVisible.value) {
                 console.log("Invalid slide number:", newValue);
@@ -224,7 +205,6 @@ class SlideshowPlayer {
             return true;
         });
 
-        this.theme.bindFunction((newValue, oldValue) => this._updateTheme(newValue, oldValue));
         this.navbarTitle.bindFunction(newValue => this._updateTitle(newValue));
         this.page.bindFunction(newValue => this._updateMainContent(newValue));
 
@@ -286,7 +266,7 @@ class SlideshowPlayer {
      */
     start() {
         // Find DOM nodes with presentation content
-        this._container = $(this.config.container);
+        this._container = $(".slides");
 
         if (!this._container) {
             console.log("Presentation content not found. Please check your HTML.");
@@ -322,7 +302,6 @@ class SlideshowPlayer {
             let slideIdFromUrl = location.hash.slice(1);
 
             this.init.value = true;
-            this.theme.value = this.config.theme;
             this.slideNumber.value = slideIdFromUrl.length > 0 ? slideIdFromUrl : this.config.slideNumber;
             this.presentationMode.value = this.config.presentationMode;
 
@@ -494,26 +473,6 @@ class SlideshowPlayer {
 
         // Display presentation title in the navbar
         this.navbarTitle.value = this.presentation.title.value;
-    }
-
-    /**
-     * Switch the currently used theme.
-     *
-     * @param {String} newTheme Name of the new theme. There must be a .less-file
-     *   of the same name in the theme directory. Also the .less-file must be
-     *   exported by theme/index.js.
-     *
-     * @param {String} oldTheme Previously active theme or an empty string
-     */
-    _updateTheme(newValue, oldValue) {
-        if (oldValue != "") {
-            let oldTheme = themes[oldValue];
-            this._container.removeClass(oldTheme.style);
-        }
-
-        let newTheme = themes[newValue];
-        this._container.addClass(newTheme.style);
-        this._container.addClass(styles.container);
     }
 
     /**

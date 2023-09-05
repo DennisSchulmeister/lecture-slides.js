@@ -9,7 +9,7 @@
  */
 "use strict";
 
-import $ from "jquery";
+import $ from "jquery/src/jquery.js";
 
 import ObservableValue from "@dschulmeis/ls-utils/observable_value.js";
 import Slide from "./slide.js";
