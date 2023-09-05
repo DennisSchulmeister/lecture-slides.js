@@ -143,7 +143,7 @@ class SlideshowPlayer {
         if (!this.config.plugins) this.config.plugins = {};
         if (!this.config.embedded) this.config.embedded = false;
         if (!this.config.mode) this.config.mode = "overview";
-        if (!this.config.Linkmode) this.config.Linkmode = "slideshow";
+        if (!this.config.linkMode) this.config.linkMode = "slideshow";
         if (!this.config.slideNumber) this.config.slideNumber = 1;
         if (!this.config.presentationMode) this.config.presentationMode = "both";
 
