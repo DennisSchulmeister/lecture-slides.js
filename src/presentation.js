@@ -66,6 +66,7 @@ class Presentation {
 
             let response = await fetch(lsIncludeElement.getAttribute("src"));
             let responseHtml = await response.text();
+
             lsIncludeElement.outerHTML = responseHtml;
         }
 
@@ -99,6 +100,15 @@ class Presentation {
             }
 
             templateReference.replaceWith(template);
+        }
+
+        // Run scripts nested in the slides
+        for (let script of jQueryHtml.find("script")) {
+            let mimeType = script.getAttribute("type") || "text/javascript";
+
+            if (mimeType.toLowerCase() === "text/javascript") {
+                eval(script.innerHTML);
+            }
         }
 
         // Create slide objects
