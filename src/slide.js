@@ -33,15 +33,16 @@ class Slide {
     constructor(values) {
         values = values || {};
 
-        this.html = values.html || document.createElement("section");
-        this.id = values.id || "";
-        this.title = values.title || document.createElement("h1");
+        this.html      = values.html      || document.createElement("section");
+        this.id        = values.id        || "";
+        this.title     = values.title     || document.createElement("h1");
         this.titleText = values.titleText || "";
-        this.content = values.content || document.createElement("div");
-        this.details = values.details || document.createElement("div");
-        this.caption = values.caption || document.createElement("div");
-        this.enabled = values.enabled || false;
-        this.chapter = values.chapter || false;
+        this.content   = values.content   || document.createElement("div");
+        this.details   = values.details   || document.createElement("div");
+        this.caption   = values.caption   || document.createElement("div");
+        this.enabled   = values.enabled   || false;
+        this.chapter   = values.chapter   || false;
+        this.number    = values.number    || "";
     }
 
     /**
@@ -49,21 +50,24 @@ class Slide {
      * Slide object from it.
      *
      * @param {Element} html Raw slide definition
+     * @param {String} slideNumber Chapter/Slide number, e.g. "3.1.2"
      * @return {Slide} New instance
      */
-    static createFromHtml(html) {
+    static createFromHtml(html, slideNumber) {
         let values = {
-            html: html,
-            id: html.id,
+            html:    html,
+            id:      html.id,
             enabled: !html.classList.contains("invisible"),
+            number:  slideNumber,
         }
+
         html = $(html);
-        let title = html.find("> h1");
+        let title   = html.find("> h1");
         let content = html.find("> article");
         let details = html.find("> aside");
         let caption = html.find("> slide-caption");
 
-        if (title.length) values.title = title[0];
+        if (title.length)   values.title   = title[0];
         if (content.length) values.content = content[0];
         if (details.length) values.details = details[0];
         if (caption.length) values.caption = caption[0];
@@ -72,10 +76,19 @@ class Slide {
             values.titleText = values.title.innerText;
         } else if (html.attr("data-title")) {
             values.titleText = html.attr("data-title");
+
+            values.title = document.createElement("h1");
+            values.title.textContent = titleText;
         }
 
         if (html.attr("data-chapter") != undefined) {
-            values.chapter = true;
+            values.chapter = html.attr("data-chapter") || "h1";
+        }
+
+        if (values.number && values.chapter) {
+            let number = values.number.includes(".") ? values.number : `${values.number}.`;
+            values.titleText = `${number} ${values.titleText}`;
+            values.title.textContent = `${number} ${values.title.textContent}`;
         }
 
         return new Slide(values);

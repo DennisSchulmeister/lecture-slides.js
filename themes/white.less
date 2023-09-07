@@ -99,7 +99,7 @@ html {
     // Table of Contents / Slide Overview
     @toc-entry-size-large: 160%;
     @toc-entry-size-small: 130%;
-    @toc-entry-chapter-margin: 1.5rem;
+    @toc-entry-chapter-margin: 1rem;
     
     #ls-overview-header {
         .justified-text-mixin;
@@ -117,33 +117,41 @@ html {
     }
     
     .ls-toc-with-chapters {
-        .ls-toc-entry-is-chapter {
+        .ls-toc-entry-chapter-h1 {
             a {
                 font-size: @toc-entry-size-large;
-            }
-    
-            .ls-toc-caption {
-                margin-left: @toc-entry-chapter-margin;
-                margin-bottom: @toc-entry-chapter-margin / 2;
+                font-weight: bold;
             }
         }
-    
-        .ls-toc-entry-is-normal {
+
+        .ls-toc-caption {
+            margin-bottom: @toc-entry-chapter-margin / 2;
+        }
+
+        .ls-toc-entry-slide {
             a {
                 font-size: @toc-entry-size-small;
             }
-    
-            margin-left: @toc-entry-chapter-margin;
         }
     
-        .ls-toc-entry-is-chapter:not(:first-child) {
+        .ls-toc-entry-chapter:not(:first-child) {
             margin-top: @toc-entry-chapter-margin;
         }
     }
     
-    .ls-overview-slide-preview {
-        box-shadow: 0 0 5px @border-color;
-        .justified-text-mixin
+    .ls-toc-with-chapters,
+    .ls-toc-without-chapters {
+        // bootstrap medium
+        @media (min-width: 769px) {
+            column-count: 2;
+            column-gap: 1.5em;
+        }
+
+        // bootstrap large
+        @media (min-width: 993px) {
+            column-count: 3;
+            column-gap: 2.5em;
+        }
     }
     
     // Slides

@@ -36,7 +36,7 @@ class ProgressBar {
         if (this._uiInitialized) return;
         this._uiInitialized = true;
 
-        this._player.slideNumber.bindFunction(() => this._updateProgressBar());
+        this._player.currentSlide.bindFunction(() => this._updateProgressBar());
         this._player.presentation.amountVisible.bindFunction(() => this._updateProgressBar());
 
         let progressClass = "fixed-top";
@@ -64,7 +64,8 @@ class ProgressBar {
         let percentage = 0;
 
         if (this._player.presentation.amountVisible.value > 0) {
-            percentage = this._player.slideNumber.value / this._player.presentation.amountVisible.value * 100;
+            let slideIndex = this._player.currentSlide.value?.index || 0;
+            percentage = (slideIndex + 1) / this._player.presentation.amountVisible.value * 100;
         }
 
         this._ui.progressbar.find(".ls-bar")[0].style.width = `${percentage}%`;

@@ -165,16 +165,17 @@ class SlideshowPlayer {
         this.presentation = null;
 
         // Create observable values
-        this.init = new ObservableValue(false);
-        this.ready = new ObservableValue(false);
-        this.uiMode = new ObservableValue("");
+        this.init        = new ObservableValue(false);
+        this.ready       = new ObservableValue(false);
+        this.uiMode      = new ObservableValue("");
         this.windowTitle = new ObservableValue("");
         this.navbarTitle = new ObservableValue("");
-        this.page = new ObservableValue({});
+        this.page        = new ObservableValue({});
 
-        this.slideNumber = new ObservableValue(0);
+        this.slideNumber      = new ObservableValue(0);
+        this.currentSlide     = new ObservableValue(null);
         this.presentationMode = new ObservableValue("both");
-        this.fadeOutColor = new ObservableValue("");
+        this.fadeOutColor     = new ObservableValue("");
 
         this.ready.bindFunction(ready => {
             let eventName = "ls-slideshow-ready";
@@ -184,21 +185,7 @@ class SlideshowPlayer {
 
         this.uiMode.addValidator(newValue => {
             if (!this._uiModes[newValue]) {
-                console.log("Unknown UI mode:", newValue);
-                return false;
-            }
-
-            return true;
-        });
-
-        this.slideNumber.addValidator(newValue => {
-            if (newValue > this.presentation.amountVisible.value) {
-                console.log("Invalid slide number:", newValue);
-                console.log(`There are only ${this.presentation.amountVisible.value} slides`);
-                return false;
-            } else if (newValue < 1) {
-                console.log("Invalid slide number:", newValue);
-                console.log("The minimum slide number is 1.");
+                console.warn("Unknown UI mode:", newValue);
                 return false;
             }
 
@@ -264,12 +251,12 @@ class SlideshowPlayer {
     /**
      * Find DOM elements with the presentation data and run the presentation.
      */
-    start() {
+    async start() {
         // Find DOM nodes with presentation content
         this._container = $(".slides");
 
         if (!this._container) {
-            console.log("Presentation content not found. Please check your HTML.");
+            console.warn("Presentation content not found. Please check your HTML.");
             return;
         }
 
@@ -296,13 +283,13 @@ class SlideshowPlayer {
                 }
             });
 
-            this.presentation = Presentation.createFromHtml(this, presentationHtml);
+            this.presentation = await Presentation.createFromHtml(this, presentationHtml);
             this._buildUiFrame();
 
             let slideIdFromUrl = location.hash.slice(1);
 
             this.init.value = true;
-            this.slideNumber.value = slideIdFromUrl.length > 0 ? slideIdFromUrl : this.config.slideNumber;
+            this.gotoSlide(slideIdFromUrl ? slideIdFromUrl : this.config.slideNumber);
             this.presentationMode.value = this.config.presentationMode;
 
             if (slideIdFromUrl) {
@@ -353,7 +340,7 @@ class SlideshowPlayer {
      */
     registerUiMode(uiMode) {
         if (this._uiModes[uiMode]) {
-            console.log("UI mode already registered:", uiMode);
+            console.warn("UI mode already registered:", uiMode);
             return false;
         }
 
@@ -362,15 +349,30 @@ class SlideshowPlayer {
     }
 
     /**
-     * Jump to a slide by number or id.
-     * @param  {String|Integer} slideId id or number of the slide
+     * Jump to a slide by number. The number can be: A chapter number string,
+     * "-1" for the previous slide or "+1" for the next slide.
+     * 
+     * @param {String} slideNumber Number of the slide,, e.g. "3.1.2"
      */
-    gotoSlide(slideId) {
-        let slide = this.presentation.getSlide(slideId);
-        if (!slide) return;
+    gotoSlide(slideNumber) {
+        let slide;
 
-        let newNumber = this.presentation.getSlideNumber(slide);
-        if (newNumber > 0) this.slideNumber.value = newNumber;
+        if (slideNumber === "-1") {
+            let index = Math.max(this.currentSlide.value.index - 1, 0);
+            slide = this.presentation.getSlideByIndex(index);
+        } else if (slideNumber === "+1") {
+            let index = Math.min(this.currentSlide.value.index + 1, this.presentation.amountVisible.value - 1);
+            slide = this.presentation.getSlideByIndex(index);
+        } else {
+            slide = this.presentation.getSlideByNumber(slideNumber);
+        }
+
+        if (!slide) {
+            slide = this.presentation.getSlideByIndex(0);
+        }
+
+        this.slideNumber.value  = slide.number;
+        this.currentSlide.value = slide;
     }
 
     /**
@@ -548,7 +550,7 @@ class SlideshowPlayer {
         if (!this.uiMode.value === "slideshow") return;
 
         let state = {
-            slideId: newSlideNumber,
+            slideNumber: newSlideNumber,
         };
 
         let url = `#${newSlideNumber}`;
@@ -591,11 +593,11 @@ class SlideshowPlayer {
         let href = target.getAttribute("href");
         if (href === null || !href.startsWith("#")) return;
 
-        let slideId = target.hash.slice(1);
-        if (!slideId.length) return;
+        let slideNumber = target.hash.slice(1);
+        if (!slideNumber.length) return;
 
         event.preventDefault();
-        this.gotoSlide(slideId);
+        this.gotoSlide(slideNumber);
 
         if (this.uiMode.value != "slideshow") this.uiMode.value = "slideshow";
     }
@@ -613,17 +615,17 @@ class SlideshowPlayer {
      * @param {DOMEvent} event The captured popstate event
      */
     _onHistoryChanged(event) {
-        let slideId = 1;
+        let slideNumber = 1;
 
         if (event.state) {
             let state = JSON.parse(event.state)
-            slideId = state.slideId;
+            slideNumber = state.slideNumber;
         } else {
-            slideId = location.hash.slice(1);
+            slideNumber = location.hash.slice(1);
         }
 
         this._lockHistory = true;
-        this.gotoSlide(slideId);
+        this.gotoSlide(slideNumber);
         this._lockHistory = false;
 
         if (this.uiMode.value != "slideshow") this.uiMode.value = "slideshow";
@@ -652,9 +654,7 @@ class SlideshowPlayer {
             case "ArrowLeft":
                 // Previous slide
                 if (this.fadeOutColor.value === "") {
-                    if (this.slideNumber.value > 1) {
-                        this.slideNumber.value--;
-                    }
+                    this.gotoSlide("-1");
                 }
                 break;
             case "ArrowRight":
@@ -663,9 +663,7 @@ class SlideshowPlayer {
             case "KeyN":
                 // Next slide
                 if (this.fadeOutColor.value === "") {
-                    if (this.slideNumber.value < this.presentation.amountVisible.value) {
-                        this.slideNumber.value++;
-                    }
+                    this.gotoSlide("+1");
                 }
                 break;
             case "Escape":
@@ -763,17 +761,13 @@ class SlideshowPlayer {
             case "swipe-left":
                 // Next slide
                 if (this.fadeOutColor.value === "") {
-                    if (this.slideNumber.value < this.presentation.amountVisible.value) {
-                        this.slideNumber.value++;
-                    }
+                    this.gotoSlide("-1");
                 }
                 break;
             case "swipe-right":
                 // Previous slide
                 if (this.fadeOutColor.value === "") {
-                    if (this.slideNumber.value > 1) {
-                        this.slideNumber.value--;
-                    }
+                    this.gotoSlide("+1");
                 }
                 break;
             case "double-tap":

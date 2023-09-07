@@ -38,7 +38,7 @@ class NavigationButtons {
 
         this._player.uiMode.bindFunction((newValue) => this._updateModeButtons());
         this._player.presentationMode.bindFunction(() => this._updateModeButtons());
-        this._player.slideNumber.bindFunction(() => this._updateNavigationButtons());
+        this._player.currentSlide.bindFunction(() => this._updateNavigationButtons());
         this._player.presentation.amountVisible.bindFunction(() => this._updateNavigationButtons());
 
         this._ui.all = $($.parseHTML(`
@@ -178,20 +178,20 @@ class NavigationButtons {
             </li>
         `));
 
-        this._ui.numbers = this._ui.all.filter("#ls-nav-numbers")[0];
-        this._ui.overviewMode = this._ui.all.find("#ls-nav-overview-mode")[0];
-        this._ui.printMode = this._ui.all.find("#ls-nav-print-mode")[0];
+        this._ui.numbers       = this._ui.all.filter("#ls-nav-numbers")[0];
+        this._ui.overviewMode  = this._ui.all.find("#ls-nav-overview-mode")[0];
+        this._ui.printMode     = this._ui.all.find("#ls-nav-print-mode")[0];
         this._ui.slidesAndText = this._ui.all.find("#ls-nav-slides-and-text")[0];
-        this._ui.slidesOnly = this._ui.all.find("#ls-nav-slides-only")[0];
-        this._ui.textOnly = this._ui.all.find("#ls-nav-text-only")[0];
-        this._ui.fadeToWhite = this._ui.all.find("#ls-nav-fade-to-white")[0];
-        this._ui.fadeToBlack = this._ui.all.find("#ls-nav-fade-to-black")[0];
-        this._ui.prev = $(this._ui.all.find("#ls-nav-prev")[0]);
-        this._ui.gotoId = $(this._ui.all.find("#ls-nav-goto-id")[0])
-        this._ui.next = $(this._ui.all.find("#ls-nav-next")[0]);
+        this._ui.slidesOnly    = this._ui.all.find("#ls-nav-slides-only")[0];
+        this._ui.textOnly      = this._ui.all.find("#ls-nav-text-only")[0];
+        this._ui.fadeToWhite   = this._ui.all.find("#ls-nav-fade-to-white")[0];
+        this._ui.fadeToBlack   = this._ui.all.find("#ls-nav-fade-to-black")[0];
+        this._ui.prev          = $(this._ui.all.find("#ls-nav-prev")[0]);
+        this._ui.gotoId        = $(this._ui.all.find("#ls-nav-goto-id")[0])
+        this._ui.next          = $(this._ui.all.find("#ls-nav-next")[0]);
 
         /**
-         * Switch to overiew UI mode
+         * Switch to overview UI mode
          */
         $(this._ui.overviewMode).on("click", event => {
             if (this._player.uiMode.value != "overview") {
@@ -255,16 +255,14 @@ class NavigationButtons {
          * Go to previous slide.
          */
         this._ui.prev.on("click", () => {
-            if (this._player.slideNumber.value < 2) return;
-            this._player.slideNumber.value--;
+            this._player.gotoSlide("-1");
         });
 
         /**
          * Go to next slide.
          */
         this._ui.next.on("click", () => {
-            if (this._player.slideNumber.value >= this._player.presentation.amountVisible.value) return;
-            this._player.slideNumber.value++;
+            this._player.gotoSlide("+1");
         });
 
         this._player.ui.navbar.find("#ls-nav-ul").append(this._ui.all);
@@ -279,21 +277,21 @@ class NavigationButtons {
         if (!this._uiInitialized) return;
 
         // Update number and amount
-        let slideNumber = this._player.slideNumber.value;
+        let slideIndex  = this._player.currentSlide.value?.index || 0;
         let slideAmount = this._player.presentation.amountVisible.value;
 
-        this._ui.numbers.innerHTML = `${slideNumber} / ${slideAmount}`;
+        this._ui.numbers.innerHTML = `${slideIndex + 1} / ${slideAmount}`;
         this._ui.gotoId.val("");
 
         // Enable or disable back button
-        if (slideNumber < 2) {
+        if (slideIndex < 1) {
             this._ui.prev.addClass("disabled");
         } else {
             this._ui.prev.removeClass("disabled");
         }
 
         // Enable or disable next button
-        if (slideNumber >= slideAmount) {
+        if (slideIndex >= slideAmount - 1) {
             this._ui.next.addClass("disabled");
         } else {
             this._ui.next.removeClass("disabled");

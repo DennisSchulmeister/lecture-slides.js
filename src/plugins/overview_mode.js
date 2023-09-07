@@ -58,16 +58,13 @@ class OverviewMode {
                     style="flex-grow: 1; flex-shrink: 1;"
                 >
                     <div class="row">
-                        <div id="ls-overview-header" class="col-md-4">
+                        <div id="ls-overview-header" class="col">
                             <!-- Front matter -->
                         </div>
                     </div>
                     <div class="row">
-                        <div id="ls-overview-toc" class="col-md-4">
+                        <div id="ls-overview-toc" class="col">
                             <!-- ToC list -->
-                        </div>
-                        <div id="ls-overview-preview" class="col-md-8" style="position: relative;">
-                            <!-- Slide preview -->
                         </div>
                     </div>
                 </div>
@@ -109,32 +106,14 @@ class OverviewMode {
     }
 
     /**
-     * Render a preview of the currently selected slide.
+     * Highlight current slide on the ToC list.
      * @param  {Integer} slideNumber Current slide number
      */
     _highlightActiveSlide(slideNumber) {
-        // Highlight current slide on the ToC list
         if (!this._ui) return;
 
         $(this._ui).find("#ls-overview-toc a").removeClass("active");
-        $(this._ui).find(`#ls-overview-toc div[data-slide=${slideNumber}] > a`).addClass("active");
-
-        // Show slide preview on the right
-        $(this._ui).find("#ls-overview-preview > *").detach();
-
-        let slide = this._player.presentation.getSlide(slideNumber);
-        if (!slide) return;
-
-        let rendered = slide.renderSlide("both", true);
-        rendered.classList.add("ls-overview-slide-preview");
-        rendered.style.transform = "scale(0.75)";
-        rendered.style.transformOrigin = "0% 0%";
-        rendered.style.display = "none";
-        rendered.style.minWidth = "60em";
-        rendered.style.minHeight = "45em";
-
-        $(this._ui).find("#ls-overview-preview").append(rendered);
-        $(rendered).fadeIn("slow");
+        $(this._ui).find(`#ls-overview-toc div[data-slide="${slideNumber}"] > a`).addClass("active");
     }
 }
 

@@ -111,8 +111,8 @@ class PrintMode {
         $(this._ui).find("#ls-print-slides > *").detach()
         let slidesContainer = $(this._ui).find("#ls-print-slides")[0];
 
-        for (let slideNumber = 1; slideNumber <= this._player.presentation.amountVisible.value; slideNumber++) {
-            let slide = this._player.presentation.getSlide(slideNumber);
+        for (let slideIndex = 0; slideIndex < this._player.presentation.amountVisible.value; slideIndex++) {
+            let slide = this._player.presentation.getSlideByIndex(slideIndex);
 
             let slideContainer = $($.parseHTML(`
                 <!-- Slide container -->
@@ -132,7 +132,7 @@ class PrintMode {
                 </div>
             `));
 
-            slideContainer.attr("data-slide-number", slideNumber);
+            slideContainer.attr("data-slide-number", slideIndex);
             slidesContainer.append(slideContainer.filter("div")[0]);
 
             // Title

@@ -99,8 +99,7 @@ class SlideshowMode {
     _renderSlide(fade) {
         fade = fade || false;
 
-        if (this._player.slideNumber.value < 1) return;
-        let slide = this._player.presentation.getSlide(this._player.slideNumber.value);
+        let slide = this._player.presentation.getSlideByNumber(this._player.slideNumber.value);
         if (!slide) return;
 
         let rendered = slide.renderSlide(this._player.presentationMode.value);

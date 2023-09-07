@@ -25,22 +25,20 @@ class Presentation {
      * it is better to create a new slide courtesy of the `createFromHTML`
      * method.
      *
-     * @param {SlideshowPlayer} player The slideshow player controling this deck
+     * @param {SlideshowPlayer} player The slideshow player controlling this deck
      * @param {Array} slides Array with Slide objects
      * @param {Object} values Optional values:
      *   * {String} title: Title of the presentation
      *   * {String} headerHtml: Html code with the front matter
      */
     constructor(player, slides, values) {
-        this.title = new ObservableValue(values.title || "");
-        this.amountAll = new ObservableValue(0);
+        this.title         = new ObservableValue(values.title || "");
         this.amountVisible = new ObservableValue(0);
-        this.headerHtml = new ObservableValue(values.headerHtml || "");
+        this.headerHtml    = new ObservableValue(values.headerHtml || "");
 
-        this._player = player;
-        this._slidesAll = slides || [];
-        this._slidesEnabled = [];
-        this._slidesById = {};
+        this._player         = player;
+        this._slidesAll      = slides || [];
+        this._slidesByNumber = {};
 
         this._updateSlideList();
     }
@@ -49,51 +47,113 @@ class Presentation {
      * Take a DOMCollection with a raw slideshow definition and create a
      * Presentation object from it.
      *
-     * @param {SlideshowPlayer} player The slideshow player controling this deck
+     * @param {SlideshowPlayer} player The slideshow player controlling this deck
      * @param {Element} html Raw slideshow definition
      * @return {Slide} New instance
      */
-    static createFromHtml(player, html) {
+    static async createFromHtml(player, html) {
+        // Get general presentation properties
         let jQueryHtml = $(html);
 
         let values = {
-            title: html.dataset.title || "",
+            title:      html.dataset.title || "",
             headerHtml: jQueryHtml.find("header").wrap("<div></div>").parent().html(),
         };
 
-        let slidesHtml = jQueryHtml.find("section");
-        let slides = [];
+        // Resolve <ls-include src="xxx.html"> references
+        for (let lsIncludeElement of jQueryHtml.children("ls-include")) {
+            if (!lsIncludeElement.hasAttribute("src")) continue;
 
-        slidesHtml.each(index => {
-            let slideHtml = slidesHtml.get(index);
-            slides.push(Slide.createFromHtml(slideHtml));
-        });
+            let response = await fetch(lsIncludeElement.getAttribute("src"));
+            let responseHtml = await response.text();
+            lsIncludeElement.outerHTML = responseHtml;
+        }
 
+        // Resolve template references
+        let templates = jQueryHtml.find("section[data-define-template]");
+        
+        for (let templateReference of jQueryHtml.find("section[data-use-template]")) {
+            let template = templates.filter(`[data-define-template="${templateReference.dataset.useTemplate}"]`);
+
+            if (!template[0]) {
+                console.warn(`Unknown slide template: ${templateReference.dataset.useTemplate}`);
+                continue;
+            }
+
+            template = template.clone()[0];
+            template.removeAttribute("data-define-template");
+
+            let templateHtml = template.innerHTML;
+            let variablesReplaced = false;
+
+            for (let attributeName of templateReference.getAttributeNames()) {
+                if (!attributeName.startsWith("data-")) continue;
+                let attributeValue = templateReference.getAttribute(attributeName);
+
+                templateHtml = templateHtml.replaceAll(`$${attributeName.slice(5)}$`, attributeValue);
+                variablesReplaced = true;
+            }
+
+            if (variablesReplaced) {
+                template.innerHTML = templateHtml;
+            }
+
+            templateReference.replaceWith(template);
+        }
+
+        // Create slide objects
+        let slidesHtml   = jQueryHtml.find("section");
+        let slides       = [];
+        let slideNumbers = [];
+
+        for (let slideHtml of slidesHtml) {
+            if (slideHtml.dataset.defineTemplate) continue;
+
+            if (slideHtml.hasAttribute("data-chapter")) {
+                slideHtml.dataset.chapter = slideHtml.dataset.chapter || "h1";
+            }
+
+            // Calculate slide number
+            let level = slideHtml.dataset.chapter || "slide";
+            let index = slideNumbers.findIndex(slideNumber_ => slideNumber_.level === level);
+
+            if (index >= 0) {
+                slideNumbers.splice(index + 1);
+            } else {
+                slideNumbers.push({
+                    level:   level,
+                    counter: 0,
+                });
+            }
+
+            slideNumbers[slideNumbers.length - 1].counter += 1;
+            let slideNumber = "";
+
+            for (let slideNumber_ of slideNumbers) {
+                if (!slideNumber) slideNumber = `${slideNumber_.counter}`;
+                else slideNumber = `${slideNumber}.${slideNumber_.counter}`;
+            }
+
+            // Create Slide
+            slides.push(Slide.createFromHtml(slideHtml, slideNumber));
+        }
+
+        // Create presentation object
         return new Presentation(player, slides, values);
     }
 
     /**
      * Find the raw DOM element which contains the definition of a slide.
-     * The slideId may either be a string or an integer. If it is a string
-     * the slide is searched by its id attribute. Otherwise the slideId is
-     * treated as the slide number. The slide number then refers only to
-     * enabled slides.
+     * Search by slide number string.
      *
-     * @param  {String|Integer} slideId id or number of the slide
+     * @param  {String} slideNumber Number of the slide, e.g. "3.1.2"
      * @return {Slide} Slide definition
      */
-    getSlide(slideId) {
-        let slide = null;
-        let slideNumber = parseInt(slideId);
-
-        if (slideNumber.toString() === "NaN") {
-            slide = this._slidesById["" + slideId];
-        } else {
-            slide = this._slidesEnabled[slideNumber - 1];
-        }
+    getSlideByNumber(slideNumber) {
+        let slide = this._slidesByNumber[slideNumber];
 
         if (!slide) {
-            console.log("Invalid slide id:", slideId);
+            console.warn("Invalid slide number:", slideNumber);
             return null;
         }
 
@@ -101,79 +161,38 @@ class Presentation {
     }
 
     /**
-     * Get the slide number for a given slide.
+     * Find the raw DOM element which contains the definition of a slide.
+     * Search via the numeric index (page number).
      *
-     * @param  {Slide} slide The searched for slide
-     * @return {Integer} The slide number or 0 if not found or not enabled.
+     * @param  {String} slideIndex Numeric slide index, e.g. 2
+     * @return {Slide} Slide definition
      */
-    getSlideNumber(slide) {
-        return this._slidesEnabled.indexOf(slide) + 1;
-    }
+    getSlideByIndex(slideIndex) {
+        let slide = this._slidesAll[slideIndex];
 
-    /**
-     * Disable a slide and thus remove it from the presentation. This can be
-     * used to toggle extra slides at runtime. e.g. one could insert an
-     * "Explain details" button to a slide which would enable or disable
-     * some extra slides.
-     *
-     * The slideId can either be an integer or an string. If it is an integer
-     * it refers to the slide number. If it is an string it refers to the id
-     * attribute of the slide.
-     *
-     * BEWARE: It is safer to access slides by id because the number constantly
-     * changes when slides are added or removed.
-     *
-     * If the currently visible slide is disabled the next slide will be shown.
-     *
-     * In order to permanently disable a slide it can also be given the
-     * `invisible` CSS class in the HTML definition. This makes it possible
-     * to have slides disabled by default which can be reenabled at run time.
-     *
-     * @param {String|Integer} slideId id or number of the slide
-     */
-    disableSlide(slideId) {
-        let currentSlide = this.getSlide(this._player.slideNumber);
-        let disabledSlide = this.getSlide(slideId);
-
-        if (!disabledSlide) return;
-        disabledSlide.enabled = false;
-        this._updateSlideList();
-
-        if (disabledSlide === currentSlide) {
-            if (this._player.slideNumber < this.amountAll.value) {
-                this._player.slideNumber++;
-            } else {
-                this._player.slideNumber--;
-            }
+        if (!slide) {
+            console.warn("Invalid slide index:", slideIndex);
+            return null;
         }
-    }
 
-    /**
-     * Reenable a previously disabled slide. See `disableSlide()` for details.
-     * @param {String|Integer} slideId id or number of the slide
-     */
-    enableSlide(slideId) {
-        let enabledSlide = this.getSlide(slideId);
-        if (!enabledSlide) return;
-        enabledSlide.enabled = true;
-        this._updateSlideList();
+        return slide;
     }
 
     /**
      * Update the internal list of enabled slides. This goes through the list
-     * `this._slides` and fills `this._slidesEnabled` whith all slides DOM
+     * `this._slides` and fills `this._slidesEnabled` with all slides DOM
      * elements without an `invisible` CSS class.
      */
     _updateSlideList() {
-        this._slidesEnabled = this._slidesAll.filter(slide => slide.enabled);
-        this._slidesById = {};
+        this._slidesByNumber = {};
+        let index = -1;
 
-        this._slidesEnabled.forEach(slide => {
-            if (slide.id) this._slidesById[slide.id] = slide;
-        });
+        for (let slide of this._slidesAll) {
+            slide.index = ++index;
+            this._slidesByNumber[slide.number] = slide;
+        }
 
-        this.amountAll.value = this._slidesAll.length;
-        this.amountVisible.value = this._slidesEnabled.length;
+        this.amountVisible.value = this._slidesAll.length;
     }
 
     /**
@@ -196,20 +215,29 @@ class Presentation {
      * Additionally ToC entries will have either one of the following classes
      * to distinguish between top-level and nested entries:
      *
-     *   * .ls-toc-entry-is-normal
-     *   * .ls-toc-entry-is-chapter
+     *   * .ls-toc-entry-slide
+     *   * .ls-toc-entry-h1
+     *   * .ls-toc-entry-h2
+     *   * .ls-toc-entry-h3
+     *   * ...
      *
      * The final result will thus be something like this:
      *
      *   <div class="ls-toc-with-chapters">
-     *       <div data-slide="1" class="ls--toc-entry ls-toc-entry-is-chapter">
-     *           <a href="#1">Top-Level Chapter Slide</a>
+     *       <div data-slide="1" class="ls-toc-entry ls-toc-entry-chapter ls-toc-entry-chapter-h1">
+     *           <a href="#1">Chapter Slide</a>
      *           <div class="ls-toc-caption">
      *               Caption Text
      *           </div>
      *       </div>
-     *       <div data-slide="2" class="ls--toc-entry ls-toc-entry-is-normal">
-     *           <a href="#1">Sub-Level Normal Slide</a>
+     *       <div data-slide="1" class="ls-toc-entry ls-toc-entry-chapter ls-toc-entry-chapter-h2">
+     *           <a href="#1">Sub-Chapter Slide</a>
+     *           <div class="ls-toc-caption">
+     *               Caption Text
+     *           </div>
+     *       </div>
+     *       <div data-slide="2" class="ls-toc-entry ls-toc-entry-slide">
+     *           <a href="#1">Normal Slide</a>
      *           <div class="ls-toc-caption">
      *               Caption Text
      *           </div>
@@ -217,10 +245,10 @@ class Presentation {
      *       …
      *   </div>
      *
-     * And for a simple ToC withouth chapters and sub-chapters:
+     * And for a simple ToC without chapters and sub-chapters:
      *
      *   <div class="ls-toc-without-chapters">
-     *       <div data-slide="1" class="ls--toc-entry ls-toc-entry-is-normal">
+     *       <div data-slide="1" class="ls-toc-entry ls-toc-entry-slide">
      *           <a href="#1">Slide Name</a>
      *           <div class="ls-toc-caption">
      *               Caption Text
@@ -232,15 +260,14 @@ class Presentation {
      * @return {Element} A new HTML element with the rendered ToC
      */
     renderTableOfContents() {
-        // List of slides on the left
         let tocElement = $(document.createElement("div"));
         let tocHasChapters = false;
 
-        for (let slideNumber = 1; slideNumber <= this.amountVisible.value; slideNumber++) {
-            let slide = this.getSlide(slideNumber);
+        for (let slideIndex = 0; slideIndex < this.amountVisible.value; slideIndex++) {
+            let slide = this.getSlideByIndex(slideIndex);
 
             let title = slide.titleText;
-            if (title === "") title = `${this._player.config.labelSlide} ${slideNumber}`;
+            if (title === "") title = `${this._player.config.labelSlide} ${slideIndex}`;
 
             let caption = slide.caption.innerHTML;
 
@@ -258,14 +285,14 @@ class Presentation {
 
             if (slide.chapter) {
                 tocHasChapters = true;
-                extraClasses = "ls-toc-entry-is-chapter";
+                extraClasses = `ls-toc-entry-chapter ls-toc-entry-chapter-${slide.chapter}`;
             } else {
-                extraClasses = "ls-toc-entry-is-normal";
+                extraClasses = "ls-toc-entry-slide";
             }
 
             tocElement.append(`
-                <div data-slide="${slideNumber}" class="ls-toc-entry ${extraClasses}">
-                    <a href="#${slideNumber}">${title}</a>
+                <div data-slide="${slide.number}" class="ls-toc-entry ${extraClasses}">
+                    <a href="#${slide.number}">${title}</a>
                     ${caption}
                 </div>
             `);
