@@ -78,7 +78,7 @@ class Slide {
             values.titleText = html.attr("data-title");
 
             values.title = document.createElement("h1");
-            values.title.textContent = titleText;
+            values.title.textContent = values.titleText;
         }
 
         if (html.attr("data-chapter") != undefined) {
