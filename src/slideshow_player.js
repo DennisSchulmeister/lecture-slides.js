@@ -267,6 +267,9 @@ class SlideshowPlayer {
         if (!this._uiInitialized) {
             this._uiInitialized = true;
 
+            this.presentation = await Presentation.createFromHtml(this, presentationHtml);
+            this._buildUiFrame();
+
             for (let pluginName in this._plugins) {
                 let plugin = this._plugins[pluginName];
                 if (!plugin.preprocessHtml) continue;
@@ -282,9 +285,6 @@ class SlideshowPlayer {
                     plugin.preprocessHtml(event.detail);
                 }
             });
-
-            this.presentation = await Presentation.createFromHtml(this, presentationHtml);
-            this._buildUiFrame();
 
             let slideIdFromUrl = location.hash.slice(1);
 
@@ -367,12 +367,10 @@ class SlideshowPlayer {
             slide = this.presentation.getSlideByNumber(slideNumber);
         }
 
-        if (!slide) {
-            slide = this.presentation.getSlideByIndex(0);
+        if (slide) {
+            this.slideNumber.value  = slide.number;
+            this.currentSlide.value = slide;
         }
-
-        this.slideNumber.value  = slide.number;
-        this.currentSlide.value = slide;
     }
 
     /**
