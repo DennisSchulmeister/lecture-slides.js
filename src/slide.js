@@ -127,12 +127,12 @@ class Slide {
             >
                 <div
                     class="ls-slide-inner container-fluid p-3"
-                    style="flex-grow: 1; flex-shrink: 1;"
+                    style="flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column;"
                 >
                     <div class="ls-slide-title row">
                         <!-- Slide title -->
                     </div>
-                    <div class="ls-slide-main row">
+                    <div class="ls-slide-main row" style="flex: 1">
                         <!-- Details and Slide -->
                     </div>
                 </div>
