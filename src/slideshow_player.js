@@ -645,6 +645,7 @@ class SlideshowPlayer {
      * @param {KeyboardEvent} event The DOM event
      */
     _handleKeyUpEvent(event) {
+        console.log(event);
         if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) return;
         if (event.target.nodeName == "INPUT" || event.target.nodeNode == "BUTTON") return;
 
@@ -759,13 +760,13 @@ class SlideshowPlayer {
             case "swipe-left":
                 // Next slide
                 if (this.fadeOutColor.value === "") {
-                    this.gotoSlide("-1");
+                    this.gotoSlide("+1");
                 }
                 break;
             case "swipe-right":
                 // Previous slide
                 if (this.fadeOutColor.value === "") {
-                    this.gotoSlide("+1");
+                    this.gotoSlide("-1");
                 }
                 break;
             case "double-tap":
