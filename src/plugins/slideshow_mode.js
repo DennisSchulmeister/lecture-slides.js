@@ -9,7 +9,7 @@
  */
 "use strict";
 
-import $ from "jquery/src/jquery.js";
+import { $ } from "jquery/src/jquery.js";
 
 /**
  * This is the main UI mode which runs the presentation.

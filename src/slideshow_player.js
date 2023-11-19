@@ -9,7 +9,7 @@
  */
 "use strict";
 
-import $ from "jquery/src/jquery.js";
+import { $ } from "jquery/src/jquery.js";
 import Hammer from "hammerjs";
 
 import plugins from "./plugins/";
