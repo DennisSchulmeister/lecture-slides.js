@@ -117,6 +117,7 @@ html {
     }
     
     .ls-toc-with-chapters {
+        .ls-toc-entry-chapter-h0,
         .ls-toc-entry-chapter-h1 {
             a {
                 font-size: @toc-entry-size-large;
@@ -159,6 +160,10 @@ html {
     .ls-slide-title h1 {
         color: @slide-title-color;
         text-shadow: 1px 1px 1px #606060;
+    }
+
+    .ls-slide-title h1[data-chapter='h0'] {
+        font-size: 300%;
     }
     
     #ls-slideshow {

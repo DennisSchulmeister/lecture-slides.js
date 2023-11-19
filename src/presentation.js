@@ -124,24 +124,29 @@ class Presentation {
             }
 
             // Calculate slide number
-            let level = slideHtml.dataset.chapter || "slide";
-            let index = slideNumbers.findIndex(slideNumber_ => slideNumber_.level === level);
-
-            if (index >= 0) {
-                slideNumbers.splice(index + 1);
-            } else {
-                slideNumbers.push({
-                    level:   level,
-                    counter: 0,
-                });
-            }
-
-            slideNumbers[slideNumbers.length - 1].counter += 1;
             let slideNumber = "";
 
-            for (let slideNumber_ of slideNumbers) {
-                if (!slideNumber) slideNumber = `${slideNumber_.counter}`;
-                else slideNumber = `${slideNumber}.${slideNumber_.counter}`;
+            if (slideHtml.dataset.chapter === "h0") {
+                slideNumber = "0";
+            } else {
+                let level = slideHtml.dataset.chapter || "slide";
+                let index = slideNumbers.findIndex(slideNumber_ => slideNumber_.level === level);
+    
+                if (index >= 0) {
+                    slideNumbers.splice(index + 1);
+                } else {
+                    slideNumbers.push({
+                        level:   level,
+                        counter: 0,
+                    });
+                }
+    
+                slideNumbers[slideNumbers.length - 1].counter += 1;
+    
+                for (let slideNumber_ of slideNumbers) {
+                    if (!slideNumber) slideNumber = `${slideNumber_.counter}`;
+                    else slideNumber = `${slideNumber}.${slideNumber_.counter}`;
+                }
             }
 
             // Create Slide
@@ -226,9 +231,9 @@ class Presentation {
      * to distinguish between top-level and nested entries:
      *
      *   * .ls-toc-entry-slide
-     *   * .ls-toc-entry-h1
-     *   * .ls-toc-entry-h2
-     *   * .ls-toc-entry-h3
+     *   * .ls-toc-entry-chapter-h1
+     *   * .ls-toc-entry-chapter-h2
+     *   * .ls-toc-entry-chapter-h3
      *   * ...
      *
      * The final result will thus be something like this:

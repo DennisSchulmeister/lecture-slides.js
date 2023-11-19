@@ -87,6 +87,8 @@ class Slide {
 
         if (values.number && values.chapter) {
             let number = values.number.includes(".") ? values.number : `${values.number}.`;
+            if (values.number < 1) number = "";
+            
             values.titleText = `${number} ${values.titleText}`;
             values.title.textContent = `${number} ${values.title.textContent}`;
         }
@@ -155,11 +157,11 @@ class Slide {
         rendered.append(background);
 
         // Add title
-        let titleContainer = rendered.find(".ls-slide-title");
+        let h1Element = this.title.cloneNode(true);
+        h1Element.dataset.chapter = this.chapter;
 
-        titleContainer.append(
-            $($.parseHTML("<div class='col'></div>")).append(this.title.cloneNode(true))
-        );
+        let titleContainer = rendered.find(".ls-slide-title");
+        titleContainer.append($($.parseHTML("<div class='col'></div>")).append(h1Element));
 
         // Add content
         let details = this.createDetailsElement(clone);
