@@ -1,0 +1,112 @@
+// Display utilities
+.center-content,
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.limit-width,
+.limited-width {
+    width: 50em;
+    max-width: 100%;
+}
+
+.limit-width2,
+.limited-width2 {
+    width: 75em;
+    max-width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+// Images and figures
+figure {
+    margin: 0 auto;
+    margin-bottom: 1em;
+}
+
+figure img {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+
+figcaption {
+    font-size: 90%;
+}
+
+.border {
+    border: 1px solid #e0e0e0;
+}
+
+// Auto-Number figures
+body {
+    counter-reset: fig;
+}
+
+figcaption {
+    counter-increment: fig;
+}
+
+figcaption:before {
+    content: var(--figure-short-code, 'Fig. ') counter(fig) ': ';
+}
+/** Better Tables **/
+td {
+    vertical-align: top;
+}
+
+th, td {
+    padding-right: 1em;
+
+    &:last-child {
+        padding-right: 0;
+    }
+}
+
+/** Nicer quotes **/
+blockquote {
+    text-align: right;
+}
+
+// Useful utility classes
+.skip {
+    margin-bottom: 2em;
+}
+
+.fn {
+    // Filename
+    font-family: 'Roboto Mono', monospace;
+    color: darkgreen;
+}
+
+.cmd {
+    // Command
+    font-family: 'Roboto Mono', monospace;
+    color: darkblue;
+}
+
+.scr {
+    // Screen text
+    font-family: 'Roboto Mono', monospace;
+    color: darkred;
+}
+
+kbd {
+    // Keyboard Command
+    font-family: 'Roboto Mono', monospace;
+    background-color: rgb(240, 240, 240);
+    color: rgb(47, 47, 47);
+    padding: 0 0.2em 0 0.2em;
+    border-radius: 0.2em;
+    border: 1px solid black;
+}
+
+.danger {
+    // Warning text
+    color: red;
+}
