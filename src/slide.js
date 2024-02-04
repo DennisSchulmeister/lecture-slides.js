@@ -67,6 +67,10 @@ class Slide {
         let details = html.find("> aside");
         let caption = html.find("> slide-caption");
 
+        if (content.length === 0 && details.length === 0) {
+            content = html;
+        }
+
         if (title.length)   values.title   = title[0];
         if (content.length) values.content = content[0];
         if (details.length) values.details = details[0];
