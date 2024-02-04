@@ -291,6 +291,11 @@ class Slide {
             element.style.backgroundSize = "cover";
         }
 
+        if (this.html.dataset.backgroundBlur) {
+            let blur = this.html.dataset.backgroundBlur || "10px";
+            element.style.filter = `blur(${blur})`;
+        }
+
         return element;
     }
 }
