@@ -8,7 +8,7 @@
  * License, or (at your option) any later version.
  */
 
-@import (css) url('https://fonts.googleapis.com/css?family=Nunito:700|Raleway:400,400i,700');
+@import (css) url('https://fonts.googleapis.com/css?family=Nunito:400,700|Raleway:400,400i,700');
 @import url("common.less");
 
 @slide-title-color: rgb(157, 26, 26);
@@ -35,7 +35,7 @@ html {
 
 .slides {
     html, body {
-        background-color: red;
+        background-color: #f0f0f0;
     }
     
     // Mixin for hyphenated and justified text content
@@ -98,8 +98,9 @@ html {
     }
     
     // Table of Contents / Slide Overview
-    @toc-entry-size-large: 160%;
-    @toc-entry-size-small: 130%;
+    @toc-entry-size-large:     160%;
+    @toc-entry-size-small:     130%;
+    @toc-entry-size-smaller:   110%;
     @toc-entry-chapter-margin: 1rem;
     
     #ls-overview-header {
@@ -130,13 +131,26 @@ html {
             margin-bottom: @toc-entry-chapter-margin / 2;
         }
 
-        .ls-toc-entry-slide {
+        .ls-toc-entry-slide-normal,
+        .ls-toc-entry-slide-parent {
             a {
                 font-size: @toc-entry-size-small;
+                margin-left: 1.7rem;
+            }
+        }
+
+        .ls-toc-entry-slide-child {
+            a {
+                font-size: @toc-entry-size-smaller;
+                margin-left: 3.4rem;
+            }
+
+            a::before {
+                content: "• ";
             }
         }
     
-        .ls-toc-entry-chapter:not(:first-child) {
+        .ls-toc-entry-chapter:not(:first-child) {        font-weight: normal !important;
             margin-top: @toc-entry-chapter-margin;
         }
     }

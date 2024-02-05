@@ -134,4 +134,11 @@ body {
             column-count: 3;
         }
     }
+
+    // Hide optional content in slides-only mode
+    .ls-slide-main[presentation-mode="slides-only"] {
+        [detail-content] {
+            display: none;
+        }
+    }
 }

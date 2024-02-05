@@ -33,16 +33,19 @@ class Slide {
     constructor(values) {
         values = values || {};
 
-        this.html      = values.html      || document.createElement("section");
-        this.id        = values.id        || "";
-        this.title     = values.title     || document.createElement("h1");
-        this.titleText = values.titleText || "";
-        this.content   = values.content   || document.createElement("div");
-        this.details   = values.details   || document.createElement("div");
-        this.caption   = values.caption   || document.createElement("div");
-        this.enabled   = values.enabled   || false;
-        this.chapter   = values.chapter   || false;
-        this.number    = values.number    || "";
+        this.html         = values.html         || document.createElement("section");
+        this.id           = values.id           || "";
+        this.title        = values.title        || document.createElement("h1");
+        this.titleText    = values.titleText    || "";
+        this.subtitle     = values.subtitle     || document.createElement("h2");
+        this.subtitleText = values.subtitleText || "";
+        this.content      = values.content      || document.createElement("div");
+        this.details      = values.details      || document.createElement("div");
+        this.caption      = values.caption      || document.createElement("div");
+        this.enabled      = values.enabled      || false;
+        this.chapter      = values.chapter      || "";
+        this.number       = values.number       || "";
+        this.type         = values.type         || "normal";
     }
 
     /**
@@ -50,31 +53,33 @@ class Slide {
      * Slide object from it.
      *
      * @param {Element} html Raw slide definition
-     * @param {String} slideNumber Chapter/Slide number, e.g. "3.1.2"
+     * @param {Object} props Additional properties number and type
      * @return {Slide} New instance
      */
-    static createFromHtml(html, slideNumber) {
+    static createFromHtml(html, props) {
         let values = {
             html:    html,
             id:      html.id,
             enabled: !html.classList.contains("invisible"),
-            number:  slideNumber,
+            ...props,
         }
 
         html = $(html);
-        let title   = html.find("> h1");
-        let content = html.find("> article");
-        let details = html.find("> aside");
-        let caption = html.find("> slide-caption");
+        let title    = html.find("> h1");
+        let subtitle = html.find("> h2");
+        let content  = html.find("> article");
+        let details  = html.find("> aside");
+        let caption  = html.find("> slide-caption");
 
         if (content.length === 0 && details.length === 0) {
             content = html;
         }
 
-        if (title.length)   values.title   = title[0];
-        if (content.length) values.content = content[0];
-        if (details.length) values.details = details[0];
-        if (caption.length) values.caption = caption[0];
+        if (title.length)    values.title    = title[0];
+        if (subtitle.length) values.subtitle = subtitle[0];
+        if (content.length)  values.content  = content[0];
+        if (details.length)  values.details  = details[0];
+        if (caption.length)  values.caption  = caption[0];
 
         if (values.title) {
             values.titleText = values.title.innerText;
@@ -83,6 +88,15 @@ class Slide {
 
             values.title = document.createElement("h1");
             values.title.textContent = values.titleText;
+        }
+
+        if (values.subtitle) {
+            values.subtitleText = values.subtitle.innerText;
+        } else if (html.attr("data-subtitle")) {
+            values.subtitleText = html.attr("data-subtitle");
+
+            values.subtitle = document.createElement("h2");
+            values.subtitle.textContent = values.subtitleText;
         }
 
         if (html.attr("data-chapter") != undefined) {
@@ -164,8 +178,14 @@ class Slide {
         let h1Element = this.title.cloneNode(true);
         h1Element.dataset.chapter = this.chapter;
 
+        let h2Element = this.subtitle.cloneNode(true);
+        h2Element.classList.add("fw-normal");
+
         let titleContainer = rendered.find(".ls-slide-title");
-        titleContainer.append($($.parseHTML("<div class='col'></div>")).append(h1Element));
+        let titleColumn = $($.parseHTML("<div class='col'></div>"));
+        titleContainer.append(titleColumn);
+        if (h1Element.innerHTML) titleColumn.append(h1Element);
+        if (h2Element.innerHTML) titleColumn.append(h2Element);
 
         // Add content
         let details = this.createDetailsElement(clone);
@@ -182,6 +202,7 @@ class Slide {
         content.classList.remove("ls-text-columns");
 
         let mainContainer = rendered.find(".ls-slide-main");
+        mainContainer.attr("presentation-mode", presentationMode);
 
         if (presentationMode == "slides-only") {
             // Presentation mode, only slide unless there is no slide.
@@ -268,7 +289,7 @@ class Slide {
         return element;
     }
 
-    /**
+    /**chapter
      * Create a new DOM element with the background content of the slide.
      * This element can be used with a negative z-index in order to display
      * the slide backdrop.

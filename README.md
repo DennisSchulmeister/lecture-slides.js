@@ -19,6 +19,8 @@ So here you go.
 
 ![Screenshot 2](screenshot2.png)
 
+![Screenshot 3](screenshot3.png)
+
 Still here, I see? Great, now I can tell you what this is all about.
 
 What is it?
@@ -68,7 +70,7 @@ Copyright
 ---------
 
 lecture-slides.js (https://www.github.com/DennisSchulmeister/lecture-slides.js) <br/>
-© 2017 – 2023 Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
+© 2017 – 2024 Dennis Schulmeister-Zimolong <dennis@pingu-mail.de>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as

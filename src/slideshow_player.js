@@ -358,13 +358,27 @@ class SlideshowPlayer {
         let slide;
 
         if (slideNumber === "-1") {
-            let index = Math.max(this.currentSlide.value.index - 1, 0);
-            slide = this.presentation.getSlideByIndex(index);
+            let index = this.currentSlide.value.index;
+
+            while (true) {
+                index = Math.max(index - 1, 0);
+                slide = this.presentation.getSlideByIndex(index);
+                if (slide?.type !== "parent") break;
+            }
         } else if (slideNumber === "+1") {
-            let index = Math.min(this.currentSlide.value.index + 1, this.presentation.amountVisible.value - 1);
-            slide = this.presentation.getSlideByIndex(index);
+            let index = this.currentSlide.value.index;
+
+            while (true) {
+                index = Math.min(index + 1, this.presentation.amountVisible.value - 1);
+                slide = this.presentation.getSlideByIndex(index);
+                if (slide?.type !== "parent") break;
+            }
         } else {
             slide = this.presentation.getSlideByNumber(slideNumber);
+
+            if (slide?.type === "parent") {
+                slide = this.presentation.getSlideByNumber(`${slideNumber}.1`);
+            }
         }
 
         if (slide) {

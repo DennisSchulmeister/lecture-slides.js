@@ -9,10 +9,11 @@
  */
 "use strict";
 
-import { $ } from "jquery/src/jquery.js";
+import { $ }           from "jquery/src/jquery.js";
 
 import ObservableValue from "@dschulmeis/ls-utils/observable_value.js";
-import Slide from "./slide.js";
+import DOMUtils        from "@dschulmeis/ls-utils/dom_utils.js";
+import Slide           from "./slide.js";
 
 /**
  * This class represents a collection of slides. It is used by the slideshow
@@ -119,18 +120,37 @@ class Presentation {
         for (let slideHtml of slidesHtml) {
             if (slideHtml.dataset.defineTemplate) continue;
 
+            let props = {
+                number: "",
+                type:   "normal",
+            };
+
             if (slideHtml.hasAttribute("data-chapter")) {
                 slideHtml.dataset.chapter = slideHtml.dataset.chapter || "h1";
             }
 
-            // Calculate slide number
-            let slideNumber = "";
+            // Handle special case of nested sections. Nested sections define sub-slides that
+            // basically render their title as a subtitle below the title of the parent slide.
+            // They are also rendered differently in the table of contents.
+            let childSectionsHtml  = $(slideHtml).find("section");
+            let parentSectionsHtml = $(slideHtml).parents("section");
 
+            if (childSectionsHtml.length > 0) {
+                props.type = "parent";
+            } else if (parentSectionsHtml.length > 0) {
+                props.type = "child";
+
+                let subtitle = slideHtml.dataset.title;
+                DOMUtils.copyAttributes(parentSectionsHtml[0], slideHtml);
+                slideHtml.dataset.subtitle = subtitle;
+            }
+
+            // Calculate slide number
             if (slideHtml.dataset.chapter === "h0") {
-                slideNumber = "0";
+                props.number = "0";
             } else {
-                let level = slideHtml.dataset.chapter || "slide";
-                let index = slideNumbers.findIndex(slideNumber_ => slideNumber_.level === level);
+                let level = slideHtml.dataset.chapter || props.type;
+                let index = slideNumbers.findIndex(slideNumber => slideNumber.level === level);
     
                 if (index >= 0) {
                     slideNumbers.splice(index + 1);
@@ -143,14 +163,14 @@ class Presentation {
     
                 slideNumbers[slideNumbers.length - 1].counter += 1;
     
-                for (let slideNumber_ of slideNumbers) {
-                    if (!slideNumber) slideNumber = `${slideNumber_.counter}`;
-                    else slideNumber = `${slideNumber}.${slideNumber_.counter}`;
+                for (let slideNumber of slideNumbers) {
+                    if (!props.number) props.number = `${slideNumber.counter}`;
+                    else props.number = `${props.number}.${slideNumber.counter}`;
                 }
             }
 
             // Create Slide
-            slides.push(Slide.createFromHtml(slideHtml, slideNumber));
+            slides.push(Slide.createFromHtml(slideHtml, props));
         }
 
         // Create presentation object
@@ -282,6 +302,7 @@ class Presentation {
             let slide = this.getSlideByIndex(slideIndex);
 
             let title = slide.titleText;
+            if (slide.type === "child") title = slide.subtitleText;
             if (title === "") title = `${this._player.config.labelSlide} ${slideIndex}`;
 
             let caption = slide.caption.innerHTML;
@@ -302,12 +323,15 @@ class Presentation {
                 tocHasChapters = true;
                 extraClasses = `ls-toc-entry-chapter ls-toc-entry-chapter-${slide.chapter}`;
             } else {
-                extraClasses = "ls-toc-entry-slide";
+                extraClasses = `ls-toc-entry-slide-${slide.type}`;
             }
 
+            let subNumber = "";
+            if (slide.type === "parent") subNumber = ".1";
+
             tocElement.append(`
-                <div data-slide="${slide.number}" class="ls-toc-entry ${extraClasses}">
-                    <a href="#${slide.number}">${title}</a>
+                <div data-slide="${slide.number}${subNumber}" class="ls-toc-entry ${extraClasses}">
+                    <a href="#${slide.number}${subNumber}">${title}</a>
                     ${caption}
                 </div>
             `);
