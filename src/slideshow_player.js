@@ -194,7 +194,9 @@ class SlideshowPlayer {
                 return false;
             }
 
-            if (["overview", "print"].includes(newValue) && this.config.disabled.includes(newValue)) {
+            if (newValue === "overview" && this.config.disabled.includes("overview")) {
+                return false;
+            } else if (newValue === "print" && this.config.disabled.includes("print-view")) {
                 return false;
             }
 
@@ -207,6 +209,8 @@ class SlideshowPlayer {
             if (["slides-and-text", "slides-only", "text-only"].includes(newValue) && this.config.disabled.includes(newValue)) {
                 return false;
             }
+
+            return true;
         });
 
         this.navbarTitle.bindFunction(newValue => this._updateTitle(newValue));
@@ -441,7 +445,10 @@ class SlideshowPlayer {
                     <span id="ls-title" class="navbar-brand navbar-text">
                         <!-- Slide title -->
                     </span>
-            
+
+                    <button
+                        class          = "navbar-toggler"
+                        type           = "button"
                         data-bs-toggle = "collapse"
                         data-bs-target = "#ls-navbar-toggled"
                         aria-controls  = "ls-navbar-toggled"
@@ -469,7 +476,7 @@ class SlideshowPlayer {
 
                     display: flex;
                     flex-direction: column;
-                    align-content: stretch;"presentationMod            e
+                    align-content: stretch;"presentationMode
                 class="${mainClass}";
             ></div>
         `));

@@ -68,7 +68,7 @@ class NavigationButtons {
                         </table>
                     </a>
 
-                    <div class="dropdown-divider"></div>
+                    <div id="ls-nav-divider1" class="dropdown-divider"></div>
 
                     <!-- Slides and Text -->
                     <a id="ls-nav-slides-and-text" class="dropdown-item">
@@ -112,7 +112,7 @@ class NavigationButtons {
                         </table>
                     </a>
 
-                    <div class="dropdown-divider"></div>
+                    <div id="ls-nav-divider2" class="dropdown-divider"></div>
 
                     <!-- Print -->
                     <a id="ls-nav-print-mode" class="dropdown-item">
@@ -128,7 +128,7 @@ class NavigationButtons {
                         </table>
                     </a>
 
-                    <div class="dropdown-divider"></div>
+                    <div id="ls-nav-divider3" class="dropdown-divider"></div>
 
                     <!-- Fade to White -->
                     <a id="ls-nav-fade-to-white" class="dropdown-item">
@@ -191,13 +191,19 @@ class NavigationButtons {
         this._ui.next          = $(this._ui.all.find("#ls-nav-next")[0]);
 
         // Remove disabled menu entries
-        if (this._player.config.disabled.includes("overview"))        this._ui.overviewMode.addClass("hidden");
-        if (this._player.config.disabled.includes("slides-and-text")) this._ui.slidesAndText.addClass("hidden");
-        if (this._player.config.disabled.includes("slides-only"))     this._ui.slidesOnly.addClass("hidden");
-        if (this._player.config.disabled.includes("text-only"))       this._ui.textOnly.addClass("hidden");
-        if (this._player.config.disabled.includes("print-view"))      this._ui.printMode.addClass("hidden");
-        if (this._player.config.disabled.includes("fade-to-white"))   this._ui.fadeToWhite.addClass("hidden");
-        if (this._player.config.disabled.includes("fade-to-black"))   this._ui.fadeToBlack.addClass("hidden");
+        let divider1 = this._ui.all.find("#ls-nav-divider1")[0];
+        let divider3 = this._ui.all.find("#ls-nav-divider3")[0];
+
+        if (this._player.config.disabled.includes("overview"))        this._ui.overviewMode.classList.add("hidden");
+        if (this._player.config.disabled.includes("slides-and-text")) this._ui.slidesAndText.classList.add("hidden");
+        if (this._player.config.disabled.includes("slides-only"))     this._ui.slidesOnly.classList.add("hidden");
+        if (this._player.config.disabled.includes("text-only"))       this._ui.textOnly.classList.add("hidden");
+        if (this._player.config.disabled.includes("print-view"))      this._ui.printMode.classList.add("hidden");
+        if (this._player.config.disabled.includes("fade-to-white"))   this._ui.fadeToWhite.classList.add("hidden");
+        if (this._player.config.disabled.includes("fade-to-black"))   this._ui.fadeToBlack.classList.add("hidden");
+
+        if (this._player.config.disabled.includes("overview")) divider1.classList.add("hidden");
+        if (this._player.config.disabled.includes("print-view")) divider3.classList.add("hidden");
 
         /**
          * Switch to overview UI mode
