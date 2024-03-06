@@ -190,6 +190,15 @@ class NavigationButtons {
         this._ui.gotoId        = $(this._ui.all.find("#ls-nav-goto-id")[0])
         this._ui.next          = $(this._ui.all.find("#ls-nav-next")[0]);
 
+        // Remove disabled menu entries
+        if (this._player.config.disabled.includes("overview"))        this._ui.overviewMode.addClass("hidden");
+        if (this._player.config.disabled.includes("slides-and-text")) this._ui.slidesAndText.addClass("hidden");
+        if (this._player.config.disabled.includes("slides-only"))     this._ui.slidesOnly.addClass("hidden");
+        if (this._player.config.disabled.includes("text-only"))       this._ui.textOnly.addClass("hidden");
+        if (this._player.config.disabled.includes("print-view"))      this._ui.printMode.addClass("hidden");
+        if (this._player.config.disabled.includes("fade-to-white"))   this._ui.fadeToWhite.addClass("hidden");
+        if (this._player.config.disabled.includes("fade-to-black"))   this._ui.fadeToBlack.addClass("hidden");
+
         /**
          * Switch to overview UI mode
          */

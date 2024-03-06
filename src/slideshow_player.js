@@ -50,6 +50,10 @@ import Presentation from "./presentation.js";
  *   Mode                     `slides-only`: Show slide without side text
  *                            `text-only`: Show side text without slide
  *   ------------- ---------- --------------------------------------------------
+ *   disabled      []         Array of Disabled menu entries: `overview`,
+ *                            `slides-and-text`, `slides-only`, `text-only`,
+ *                            `print-view`, `fade-to-white`, `fade-to-black`
+ *   ------------- ---------- --------------------------------------------------
  *   labelNext     Next       Label for the "go to next slide" button
  *   ------------- ---------- --------------------------------------------------
  *   labelPrev     Previous   Label for the "go to previous slide" button
@@ -146,6 +150,7 @@ class SlideshowPlayer {
         if (!this.config.linkMode) this.config.linkMode = "slideshow";
         if (!this.config.slideNumber) this.config.slideNumber = 1;
         if (!this.config.presentationMode) this.config.presentationMode = "both";
+        if (!this.config.disabled) this.config.disabled = [];
 
         if (!this.config.labelNext) this.config.labelNext = "Next";
         if (!this.config.labelPrev) this.config.labelPrev = "Previous";
@@ -189,7 +194,19 @@ class SlideshowPlayer {
                 return false;
             }
 
+            if (["overview", "print"].includes(newValue) && this.config.disabled.includes(newValue)) {
+                return false;
+            }
+
             return true;
+        });
+
+        this.presentationMode.addValidator(newValue => {
+            if (newValue === "both") newValue === "slides-and-text";
+
+            if (["slides-and-text", "slides-only", "text-only"].includes(newValue) && this.config.disabled.includes(newValue)) {
+                return false;
+            }
         });
 
         this.navbarTitle.bindFunction(newValue => this._updateTitle(newValue));
@@ -223,7 +240,7 @@ class SlideshowPlayer {
 
         // DOM elements for the user interface
         this.ui = {};
-
+            
         this._uiInitialized = false;
         this._uiModes = {};
         this._container = null;
@@ -386,7 +403,7 @@ class SlideshowPlayer {
             this.currentSlide.value = slide;
         }
     }
-
+            
     /**
      * Returns the DOM element which needs to be accessed to get or set the
      * current scroll position.
@@ -424,10 +441,7 @@ class SlideshowPlayer {
                     <span id="ls-title" class="navbar-brand navbar-text">
                         <!-- Slide title -->
                     </span>
-
-                    <button
-                        class          = "navbar-toggler"
-                        type           = "button"
+            
                         data-bs-toggle = "collapse"
                         data-bs-target = "#ls-navbar-toggled"
                         aria-controls  = "ls-navbar-toggled"
@@ -455,7 +469,7 @@ class SlideshowPlayer {
 
                     display: flex;
                     flex-direction: column;
-                    align-content: stretch;"
+                    align-content: stretch;"presentationMod            e
                 class="${mainClass}";
             ></div>
         `));
@@ -515,7 +529,7 @@ class SlideshowPlayer {
         let slideId = page.slideId;
         let fade = page.fade || false;
 
-        let oldContent = this.ui.main.find("*");
+        let oldContent = this.ui.main.find("*");            
 
         if (oldContent.length === 0 || !fade) {
             this.ui.main[1].innerHTML = "";
@@ -578,7 +592,7 @@ class SlideshowPlayer {
      * DOM event handler for clicked links. The event handler is actually added
      * to the window object in order to capture all clicks to all links no matter
      * how and when the link elements were created.
-     *
+     *            
      * Normal links will continue to work as usual, triggering the browser
      * to load a new page. However if the link contains a hash URL the link
      * will be used to goto a new slide.
@@ -812,12 +826,15 @@ class SlideshowPlayer {
 
     /**
      * This implements the fade to black and fade to white features. Calling
-     * this method will either fade the countent out or fades it back in.
+     * this method will either fade out the content or fades it back in.
      *
      * @param  {String} color1 CSS color declaration for background
      * @param  {String} color2 CSS color declaration for text
      */
     toggleFadeOut(color1, color2) {
+        if (color1 === "white" && this.config.disabled.includes("fade-to-white")) return;
+        if (color1 === "black" && this.config.disabled.includes("fade-to-black")) return;
+
         let div = this.ui.fadeOut.filter("*")[0];
         div.addEventListener("click", () => this.toggleFadeOut());
 
