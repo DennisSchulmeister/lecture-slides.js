@@ -16,6 +16,9 @@
         "slideshow-maker",
         "e-learning"
     ],
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "do-publish": "npm publish --access=public"
     },
