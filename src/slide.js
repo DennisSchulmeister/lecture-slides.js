@@ -187,6 +187,15 @@ class Slide {
         if (h1Element.innerHTML) titleColumn.append(h1Element);
         if (h2Element.innerHTML) titleColumn.append(h2Element);
 
+        // Set colors
+        let h1Color = this.html.dataset["titleColor"];
+        if (h1Color) h1Element.style.color = h1Color;
+
+        let h2Color = this.html.dataset["subtitleColor"];
+        if (h2Color) h2Element.style.color = h2Color;
+        let textColor = this.html.dataset["textColor"];
+        if (textColor) rendered[0].style.color = textColor;
+
         // Add content
         let details = this.createDetailsElement(clone);
         let content = this.createContentElement(clone);

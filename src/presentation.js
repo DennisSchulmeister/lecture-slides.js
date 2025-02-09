@@ -155,7 +155,6 @@ class Presentation {
                         childArticle = document.createElement("article");
                         $(slideHtml).contents().detach().appendTo(childArticle);
                         slideHtml.append(childArticle);
-                        console.log(childArticle);
                     }
 
                     slideHtml.append(clonedAside);
