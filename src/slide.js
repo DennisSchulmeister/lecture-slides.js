@@ -106,7 +106,7 @@ class Slide {
         if (values.number && values.chapter) {
             let number = values.number.includes(".") ? values.number : `${values.number}.`;
             if (values.number < 1) number = "";
-            
+
             values.titleText = `${number} ${values.titleText}`;
             values.title.textContent = `${number} ${values.title.textContent}`;
         }
@@ -289,7 +289,7 @@ class Slide {
         return element;
     }
 
-    /**chapter
+    /**
      * Create a new DOM element with the background content of the slide.
      * This element can be used with a negative z-index in order to display
      * the slide backdrop.

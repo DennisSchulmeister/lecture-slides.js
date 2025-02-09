@@ -73,7 +73,7 @@ class Presentation {
 
         // Resolve template references
         let templates = jQueryHtml.find("section[data-define-template]");
-        
+
         for (let templateReference of jQueryHtml.find("section[data-use-template]")) {
             let template = templates.filter(`[data-define-template="${templateReference.dataset.useTemplate}"]`);
 
@@ -143,6 +143,23 @@ class Presentation {
                 let subtitle = slideHtml.dataset.title;
                 DOMUtils.copyAttributes(parentSectionsHtml[0], slideHtml);
                 slideHtml.dataset.subtitle = subtitle;
+
+                let parentAside = $(parentSectionsHtml[0]).find("> aside");
+                let childAside  = $(slideHtml).find("> aside");
+
+                if (parentAside.length && !childAside.length) {
+                    let clonedAside  = parentAside.clone()[0];
+                    let childArticle = $(slideHtml).find("> article");
+
+                    if (!childArticle.length) {
+                        childArticle = document.createElement("article");
+                        $(slideHtml).contents().detach().appendTo(childArticle);
+                        slideHtml.append(childArticle);
+                        console.log(childArticle);
+                    }
+
+                    slideHtml.append(clonedAside);
+                }
             }
 
             // Calculate slide number
@@ -151,7 +168,7 @@ class Presentation {
             } else {
                 let level = slideHtml.dataset.chapter || props.type;
                 let index = slideNumbers.findIndex(slideNumber => slideNumber.level === level);
-    
+
                 if (index >= 0) {
                     slideNumbers.splice(index + 1);
                 } else {
@@ -160,9 +177,9 @@ class Presentation {
                         counter: 0,
                     });
                 }
-    
+
                 slideNumbers[slideNumbers.length - 1].counter += 1;
-    
+
                 for (let slideNumber of slideNumbers) {
                     if (!props.number) props.number = `${slideNumber.counter}`;
                     else props.number = `${props.number}.${slideNumber.counter}`;
