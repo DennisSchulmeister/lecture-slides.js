@@ -119,6 +119,7 @@ class Presentation {
 
         for (let slideHtml of slidesHtml) {
             if (slideHtml.dataset.defineTemplate) continue;
+            if (slideHtml.dataset.hidden) continue;
 
             let props = {
                 number: "",
