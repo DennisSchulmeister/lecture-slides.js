@@ -62,13 +62,21 @@ class Presentation {
         };
 
         // Resolve <ls-include src="xxx.html"> references
-        for (let lsIncludeElement of jQueryHtml.children("ls-include")) {
-            if (!lsIncludeElement.hasAttribute("src")) continue;
+        for (let i = 0; i < 10; i++) {
+            let includeElements = [...jQueryHtml.children("ls-include")].filter(lsIncludeElement =>
+                lsIncludeElement.hasAttribute("src") && !lsIncludeElement.dataset.hidden
+            );
 
-            let response = await fetch(lsIncludeElement.getAttribute("src"));
-            let responseHtml = await response.text();
+            if (includeElements.length === 0) break;
 
-            lsIncludeElement.outerHTML = responseHtml;
+            let responses = await Promise.all(includeElements.map(async lsIncludeElement => {
+                let response = await fetch(lsIncludeElement.getAttribute("src"));
+                return response.text();
+            }));
+
+            for (let i = 0; i < includeElements.length; i++) {
+                includeElements[i].outerHTML = await responses[i];
+            }
         }
 
         // Resolve template references
